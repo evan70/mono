@@ -1,8 +1,9 @@
+import neonCssUrl from '@nativa/theme-neon/src/assets/neon.css?url';
+
 document.addEventListener('DOMContentLoaded', () => {
   const switcher = document.getElementById('dev-theme-switcher');
   if (!switcher) return;
 
-  const neonCssUrl = '/themes/neon-theme/neon.css';
   let isNeon = false;
   switcher.addEventListener('click', () => {
     isNeon = !isNeon;

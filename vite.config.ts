@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import neonTheme from '../themes/neon-theme/src/index';
+import neonTheme from '@nativa/theme-neon';
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
@@ -8,16 +8,14 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       allowedHosts: true,
+      port: 5173,
     },
     preview: {
       allowedHosts: true,
+      port: 4173,
     },
     build: {
       outDir: 'dist',
-      server: {
-        port: 4173,
-        allowedHosts: ['.trycloudflare.com'],
-      },
       manifest: 'vanilla-cards-manifest.json',
       rollupOptions: {
         input: {

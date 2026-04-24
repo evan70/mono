@@ -1,0 +1,16 @@
+{
+  "name": "@nativa/theme-neon",
+  "version": "1.0.0",
+  "description": "Neon theme for Vanilla Cards",
+  "main": "src/index.ts",
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "theme",
+    "neon",
+    "vanilla-cards"
+  ],
+  "author": "Nativa",
+  "license": "MIT"
+}
