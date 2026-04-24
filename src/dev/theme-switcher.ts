@@ -1,4 +1,4 @@
-import neonCssUrl from '@nativa/theme-neon/assets/neon.css?url';
+import neonCssUrl from '../../packages/theme-neon/src/assets/neon.css?url';
 
 document.addEventListener('DOMContentLoaded', () => {
   const switcher = document.getElementById('dev-theme-switcher');

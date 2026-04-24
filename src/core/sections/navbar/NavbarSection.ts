@@ -1,4 +1,4 @@
-import { BaseSection } from '../BaseSection';
+import { BaseSection } from '../BaseSection.ts';
 
 export class NavbarSection extends BaseSection {
   init(): void {

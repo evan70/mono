@@ -1,5 +1,5 @@
 import './stats.css';
-import { BaseSection } from '../BaseSection';
+import { BaseSection } from '../BaseSection.ts';
 
 export class StatsSection extends BaseSection {
   init(): void {

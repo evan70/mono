@@ -1,5 +1,5 @@
 import './cta.css';
-import { BaseSection } from '../BaseSection';
+import { BaseSection } from '../BaseSection.ts';
 
 export class CTASection extends BaseSection {
   init(): void {

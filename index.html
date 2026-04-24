@@ -8,7 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   
   <!-- Init script (blocks rendering, prevents FOUC) -->
-  <script type="module" src="src/init.js"></script>
+  <script type="module" src="src/init.ts"></script>
 </head>
 <body class="home-page">
 
@@ -209,9 +209,12 @@
   <!-- Theme Toggle handled by NavbarSection -->
   
   <!-- Dev mode script for toggling the Neon CSS -->
-  <script type="module" src="src/dev/theme-switcher.js"></script>
+  <script type="module" src="src/dev/theme-switcher.ts"></script>
 
-  <!-- Main app bundle (includes core and home logic) -->
-  <script type="module" src="src/app.js"></script>
+  <!-- Main app bundle (includes core logic) -->
+  <script type="module" src="src/app.ts"></script>
+
+  <!-- Page specific bundle (home) -->
+  <script type="module" src="src/frontend/home/home.ts"></script>
 </body>
 </html>

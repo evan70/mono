@@ -1,5 +1,5 @@
 import './hero.css';
-import { BaseSection } from '../BaseSection';
+import { BaseSection } from '../BaseSection.ts';
 
 export class HeroSection extends BaseSection {
   init(): void {
