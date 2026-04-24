@@ -2,11 +2,22 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 
-const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'));
-
 export default defineConfig(({ mode }) => {
   return {
     base: './',
+    plugins: [
+      {
+        name: 'html-transform',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            if (req.url === '/' || req.url === '/index.html') {
+              req.url = '/vite-entry.html';
+            }
+            next();
+          });
+        },
+      },
+    ],
     server: {
       allowedHosts: true,
       port: 5173,
@@ -17,10 +28,11 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist',
+      emptyOutDir: true,
       manifest: 'vanilla-cards-manifest.json',
       rollupOptions: {
         input: {
-          main: resolve(__dirname, 'index.html'),
+          index: resolve(__dirname, 'vite-entry.html'),
           init: resolve(__dirname, 'src/init.ts'),
           'core-app': resolve(__dirname, 'src/app.ts'),
           'core-css': resolve(__dirname, 'src/css.ts'),
@@ -28,14 +40,14 @@ export default defineConfig(({ mode }) => {
           'theme-switcher': resolve(__dirname, 'src/dev/theme-switcher.ts')
         },
         output: {
-          entryFileNames: `[name].[hash].js`,
-          chunkFileNames: `[name].[hash].js`,
+          entryFileNames: `[name].js`,
+          chunkFileNames: `[name].js`,
           assetFileNames: (assetInfo) => {
             const name = assetInfo.name || '';
             if (name.endsWith('.css')) {
-              return `[name].[hash].css`;
+              return `[name].css`;
             }
-            return `assets/[name].[hash][extname]`;
+            return `assets/[name][extname]`;
           }
         }
       }
