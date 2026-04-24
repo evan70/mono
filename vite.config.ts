@@ -3,11 +3,8 @@ import { resolve } from 'path';
 import { readFileSync } from 'fs';
 
 const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'));
-const version = pkg.version;
 
 export default defineConfig(({ mode }) => {
-  const isProd = mode === 'production';
-  
   return {
     base: './',
     server: {

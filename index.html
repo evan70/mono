@@ -8,7 +8,18 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   
   <!-- Init script (blocks rendering, prevents FOUC) -->
-  <script type="module" src="src/init.ts"></script>
+  <script>
+    (function() {
+      try {
+        const storedTheme = localStorage.getItem('nativa-theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const themeToSet = storedTheme ? storedTheme : (systemPrefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = themeToSet;
+      } catch (e) {
+        console.warn('Could not initialize theme', e);
+      }
+    })();
+  </script>
 </head>
 <body class="home-page">
 
@@ -209,12 +220,12 @@
   <!-- Theme Toggle handled by NavbarSection -->
   
   <!-- Dev mode script for toggling the Neon CSS -->
-  <script type="module" src="src/dev/theme-switcher.ts"></script>
+  <script type="module" src="./src/dev/theme-switcher.ts"></script>
 
   <!-- Main app bundle (includes core logic) -->
-  <script type="module" src="src/app.ts"></script>
+  <script type="module" src="./src/app.ts"></script>
 
   <!-- Page specific bundle (home) -->
-  <script type="module" src="src/frontend/home/home.ts"></script>
+  <script type="module" src="./src/frontend/home/home.ts"></script>
 </body>
 </html>
