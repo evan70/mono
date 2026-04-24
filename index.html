@@ -20,6 +20,30 @@
       }
     })();
   </script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="./src/core/tokens/unified.css" />
+  <link rel="stylesheet" href="./src/core/components/navbar.css" />
+  <link rel="stylesheet" href="./src/core/components/button.css" />
+  <link rel="stylesheet" href="./src/core/components/vanilla-card.css" />
+  <link rel="stylesheet" href="./src/core/components/card-grid.css" />
+  <link rel="stylesheet" href="./src/core/components/icon.css" />
+  <link rel="stylesheet" href="./src/core/components/icon-button.css" />
+  <link rel="stylesheet" href="./src/core/components/footer.css" />
+  
+  <!-- Section Styles -->
+  <link rel="stylesheet" href="./src/core/sections/hero/hero.css" />
+  <link rel="stylesheet" href="./src/core/sections/features/features.css" />
+  <link rel="stylesheet" href="./src/core/sections/stats/stats.css" />
+  <link rel="stylesheet" href="./src/core/sections/cta/cta.css" />
+
+  <!-- Page Specific Styles -->
+  <link rel="stylesheet" href="./src/frontend/home/home.css" />
+
+  <!-- Scripts -->
+  <script type="module" src="./src/app.ts"></script>
+  <script type="module" src="./src/frontend/home/home.ts"></script>
+  <script type="module" src="./src/dev/theme-switcher.ts"></script>
 </head>
 <body class="home-page">
 
@@ -218,14 +242,5 @@
   </footer>
 
   <!-- Theme Toggle handled by NavbarSection -->
-  
-  <!-- Dev mode script for toggling the Neon CSS -->
-  <script type="module" src="./src/dev/theme-switcher.ts"></script>
-
-  <!-- Main app bundle (includes core logic) -->
-  <script type="module" src="./src/app.ts"></script>
-
-  <!-- Page specific bundle (home) -->
-  <script type="module" src="./src/frontend/home/home.ts"></script>
 </body>
 </html>
