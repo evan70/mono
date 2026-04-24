@@ -25,3 +25,17 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Theme Toggle Icons */
+.theme-toggle__sun,
+.theme-toggle__moon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle__sun {
+  display: block;
+}
+
+[data-theme="light"] .theme-toggle__moon {
+  display: block;
+}

@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           'index': resolve(__dirname, 'index.html'),
+          'core-init': resolve(__dirname, 'src/init.ts'),
           'core-app': resolve(__dirname, 'src/app.ts'),
           'neon-theme': resolve(__dirname, 'src/dev/theme-switcher.ts')
         },
