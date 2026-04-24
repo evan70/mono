@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Neon theme for Vanilla Cards",
   "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./assets/*": "./src/assets/*"
+  },
   "files": [
     "src"
   ],
