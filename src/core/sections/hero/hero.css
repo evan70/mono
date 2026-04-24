@@ -8,6 +8,11 @@
   background-color: var(--color-bg);
 }
 
+.hero-section--fw {
+  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100dvh - var(--navbar-height));
+}
+
 .hero-section__content {
   max-width: 800px;
   margin: 0 auto;

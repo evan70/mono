@@ -66,6 +66,9 @@
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
   --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
 
+  /* Navbar */
+  --navbar-height: 4rem;
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
@@ -75,6 +78,21 @@
   /* Focus Ring */
   --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--brand-gold);
   --focus-ring-inset: inset 0 0 0 2px var(--brand-gold);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 [data-theme="light"] {
