@@ -7,19 +7,17 @@
   <title>Vanilla Cards Preview</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   
-  <!-- Preconnect to the same origin to speed up local resolution if needed -->
-  <link rel="preconnect" href="/" />
-
-  <!-- Init script (blocks rendering, prevents FOUC) -->
-  <script type="module" src="src/init.ts"></script>
-  
-  <!-- Dev mode script for toggling the Neon CSS -->
-  <script type="module" src="src/dev/theme-switcher.ts"></script>
-
-  <!-- In development, Vite processes these directly -->
-  <script type="module" src="src/css.ts"></script>
-  <script type="module" src="src/app.ts"></script>
-  <script type="module" src="src/frontend/home/home.ts"></script>
+  <!-- Init script (inline to prevent FOUC and reduce critical path) -->
+  <script>
+    (function() {
+      try {
+        const storedTheme = localStorage.getItem('nativa-theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const themeToSet = storedTheme ? storedTheme : (systemPrefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = themeToSet;
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="home-page">
 
@@ -218,5 +216,11 @@
   </footer>
 
   <!-- Theme Toggle handled by NavbarSection -->
+  
+  <!-- Dev mode script for toggling the Neon CSS -->
+  <script type="module" src="src/dev/theme-switcher.ts"></script>
+
+  <!-- Main app bundle (includes core and home logic) -->
+  <script type="module" src="src/app.ts"></script>
 </body>
 </html>
