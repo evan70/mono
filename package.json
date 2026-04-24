@@ -1,6 +1,6 @@
 {
   "name": "@nativa/vanilla-cards",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Vanilla JS and CSS cards architecture for Nativa CMS",
   "type": "module",
   "engines": {
