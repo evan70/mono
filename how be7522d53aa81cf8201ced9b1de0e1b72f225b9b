@@ -1,0 +1,2616 @@
+[33mcommit be7522d53aa81cf8201ced9b1de0e1b72f225b9b[m[33m ([m[1;34mgrafted[m[33m, [m[1;36mHEAD[m[33m -> [m[1;32mcto/update-find-in-git-css[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: cto-new[bot] <140088366+cto-new[bot]@users.noreply.github.com>
+Date:   Fri Apr 24 12:46:53 2026 +0000
+
+    Merge pull request #16 from evan70/cto/fix-gh-pages-dist-files
+    
+    Fix GitHub Pages deployment to serve built files
+
+[1mdiff --git a/.cursorrules b/.cursorrules[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2b4ff3c[m
+[1m--- /dev/null[m
+[1m+++ b/.cursorrules[m
+[36m@@ -0,0 +1,30 @@[m
+[32m+[m[32m# Project Rules[m
+[32m+[m
+[32m+[m[32m## Technical Stack[m
+[32m+[m[32m- TypeScript (ES2022)[m
+[32m+[m[32m- Vite for bundling[m
+[32m+[m[32m- Pure CSS with BEM methodology[m
+[32m+[m[32m- No frontend frameworks (Vanilla JS only)[m
+[32m+[m[32m- pnpm for package management[m
+[32m+[m
+[32m+[m[32m## Architecture[m
+[32m+[m[32m- Modular, section-based architecture.[m
+[32m+[m[32m- Core Bundle: Loaded on every page (tokens, global components, SectionLoader).[m
+[32m+[m[32m- Page-Specific Bundles: Separate entry points per page to minimize payload.[m
+[32m+[m[32m- Sections auto-instantiate via `data-section` attributes.[m
+[32m+[m
+[32m+[m[32m## CSS Guidelines[m
+[32m+[m[32m- Follow BEM methodology (`.block__element--modifier`).[m
+[32m+[m[32m- Use CSS custom properties (design tokens) from `unified.css`.[m
+[32m+[m[32m- Keep CSS flat; avoid deep nesting.[m
+[32m+[m[32m- No CSS frameworks.[m
+[32m+[m
+[32m+[m[32m## Performance & SEO[m
+[32m+[m[32m- Maintain 100/100 Lighthouse scores.[m
+[32m+[m[32m- Proper use of semantic HTML and landmarks.[m
+[32m+[m[32m- Optimized asset loading.[m
+[32m+[m
+[32m+[m[32m## Development Workflow[m
+[32m+[m[32m- All changes must be documented in a PR.[m
+[32m+[m[32m- Use pnpm for all dependency management and scripts.[m
+[32m+[m[32m- GitHub Actions handles CI/CD and deployment to GitHub Pages.[m
+[1mdiff --git a/.github/pull_request_template.md b/.github/pull_request_template.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..53561d7[m
+[1m--- /dev/null[m
+[1m+++ b/.github/pull_request_template.md[m
+[36m@@ -0,0 +1,17 @@[m
+[32m+[m[32m## Description[m
+[32m+[m[32mProvide a brief summary of the changes introduced by this pull request.[m
+[32m+[m
+[32m+[m[32m## Type of Change[m
+[32m+[m[32m- [ ] Bug fix[m
+[32m+[m[32m- [ ] New feature[m
+[32m+[m[32m- [ ] Breaking change[m
+[32m+[m[32m- [ ] Documentation update[m
+[32m+[m[32m- [ ] Performance improvement[m
+[32m+[m[32m- [ ] Chore[m
+[32m+[m
+[32m+[m[32m## Checklist[m
+[32m+[m[32m- [ ] My code follows the style guidelines of this project[m
+[32m+[m[32m- [ ] I have performed a self-review of my own code[m
+[32m+[m[32m- [ ] I have commented my code, particularly in hard-to-understand areas[m
+[32m+[m[32m- [ ] My changes generate no new warnings[m
+[32m+[m[32m- [ ] Any dependent changes have been merged and published in downstream modules[m
+[1mdiff --git a/.github/workflows/deploy.yml b/.github/workflows/deploy.yml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..09becee[m
+[1m--- /dev/null[m
+[1m+++ b/.github/workflows/deploy.yml[m
+[36m@@ -0,0 +1,58 @@[m
+[32m+[m[32mname: CI/CD[m
+[32m+[m
+[32m+[m[32mon:[m
+[32m+[m[32m  push:[m
+[32m+[m[32m    branches: [ main ][m
+[32m+[m[32m  pull_request:[m
+[32m+[m[32m    branches: [ main ][m
+[32m+[m[32m  workflow_dispatch:[m
+[32m+[m
+[32m+[m[32mpermissions:[m
+[32m+[m[32m  contents: read[m
+[32m+[m[32m  pages: write[m
+[32m+[m[32m  id-token: write[m
+[32m+[m
+[32m+[m[32mconcurrency:[m
+[32m+[m[32m  group: "pages"[m
+[32m+[m[32m  cancel-in-progress: true[m
+[32m+[m
+[32m+[m[32mjobs:[m
+[32m+[m[32m  build:[m
+[32m+[m[32m    runs-on: ubuntu-latest[m
+[32m+[m[32m    steps:[m
+[32m+[m[32m      - name: Checkout[m
+[32m+[m[32m        uses: actions/checkout@v4[m
+[32m+[m
+[32m+[m[32m      - name: Install pnpm[m
+[32m+[m[32m        uses: pnpm/action-setup@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          version: 10[m
+[32m+[m
+[32m+[m[32m      - name: Set up Node[m
+[32m+[m[32m        uses: actions/setup-node@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          node-version: 20[m
+[32m+[m[32m          cache: 'pnpm'[m
+[32m+[m
+[32m+[m[32m      - name: Install dependencies[m
+[32m+[m[32m        run: pnpm install[m
+[32m+[m
+[32m+[m[32m      - name: Build[m
+[32m+[m[32m        run: pnpm run build[m
+[32m+[m
+[32m+[m[32m      - name: Upload artifact[m
+[32m+[m[32m        uses: actions/upload-pages-artifact@v3[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          path: dist[m
+[32m+[m
+[32m+[m[32m  deploy:[m
+[32m+[m[32m    if: github.event_name == 'push' && github.ref == 'refs/heads/main'[m
+[32m+[m[32m    needs: build[m
+[32m+[m[32m    runs-on: ubuntu-latest[m
+[32m+[m[32m    environment:[m
+[32m+[m[32m      name: github-pages[m
+[32m+[m[32m      url: ${{ steps.deployment.outputs.page_url }}[m
+[32m+[m[32m    steps:[m
+[32m+[m[32m      - name: Deploy to GitHub Pages[m
+[32m+[m[32m        id: deployment[m
+[32m+[m[32m        uses: actions/deploy-pages@v4[m
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..66838e0[m
+[1m--- /dev/null[m
+[1m+++ b/.gitignore[m
+[36m@@ -0,0 +1,76 @@[m
+[32m+[m[32m# Compiled and build artifacts[m
+[32m+[m[32m*.pyc[m
+[32m+[m[32m__pycache__/[m
+[32m+[m[32m*.o[m
+[32m+[m[32m*.obj[m
+[32m+[m[32m*.class[m
+[32m+[m[32m*.exe[m
+[32m+[m[32m*.dll[m
+[32m+[m[32m*.so[m
+[32m+[m[32m*.a[m
+[32m+[m[32m*.out[m
+[32m+[m
+[32m+[m[32m# Build System[m
+[32m+[m[32m.turbo/[m
+[32m+[m
+[32m+[m[32m# Dependencies[m
+[32m+[m[32m.venv/[m
+[32m+[m[32mvenv/[m
+[32m+[m[32mnode_modules/[m
+[32m+[m[32mdist/[m
+[32m+[m[32mbuild/[m
+[32m+[m[32mtarget/[m
+[32m+[m[32m.gradle/[m
+[32m+[m[32m.mypy_cache/[m
+[32m+[m[32m.pytest_cache/[m
+[32m+[m
+[32m+[m[32m# Logs and temp files[m
+[32m+[m[32m*.log[m
+[32m+[m[32m*.tmp[m
+[32m+[m[32m*.swp[m
+[32m+[m[32m*.swo[m
+[32m+[m
+[32m+[m[32m# Environment[m
+[32m+[m[32m.env[m
+[32m+[m[32m.env.local[m
+[32m+[m[32m*.env.*[m
+[32m+[m
+[32m+[m[32m# Editors[m
+[32m+[m[32m.vscode/[m
+[32m+[m[32m.idea/[m
+[32m+[m
+[32m+[m[32m# System files[m
+[32m+[m[32m.DS_Store[m
+[32m+[m[32mThumbs.db[m
+[32m+[m
+[32m+[m[32m# Coverage[m
+[32m+[m[32mcoverage/[m
+[32m+[m[32mhtmlcov/[m
+[32m+[m[32m.coverage[m
+[32m+[m
+[32m+[m[32m# Compressed files[m
+[32m+[m[32m*.zip[m
+[32m+[m[32m*.gz[m
+[32m+[m[32m*.tar[m
+[32m+[m[32m*.tgz[m
+[32m+[m[32m*.bz2[m
+[32m+[m[32m*.xz[m
+[32m+[m[32m*.7z[m
+[32m+[m[32m*.rar[m
+[32m+[m[32m*.zst[m
+[32m+[m[32m*.lz4[m
+[32m+[m[32m*.lzh[m
+[32m+[m[32m*.cab[m
+[32m+[m[32m*.arj[m
+[32m+[m[32m*.rpm[m
+[32m+[m[32m*.deb[m
+[32m+[m[32m*.Z[m
+[32m+[m[32m*.lz[m
+[32m+[m[32m*.lzo[m
+[32m+[m[32m*.tar.gz[m
+[32m+[m[32m*.tar.bz2[m
+[32m+[m[32m*.tar.xz[m
+[32m+[m[32m*.tar.zst[m
+[32m+[m[32m# Database[m
+[32m+[m[32m*.db[m
+[32m+[m[32m*.db-journal[m
+[1mdiff --git a/.npmrc b/.npmrc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..bf2e764[m
+[1m--- /dev/null[m
+[1m+++ b/.npmrc[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32mshamefully-hoist=true[m
+[1mdiff --git a/.nvmrc b/.nvmrc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..209e3ef[m
+[1m--- /dev/null[m
+[1m+++ b/.nvmrc[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32m20[m
+[1mdiff --git a/.stylelintrc.json b/.stylelintrc.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..39ccd2a[m
+[1m--- /dev/null[m
+[1m+++ b/.stylelintrc.json[m
+[36m@@ -0,0 +1,14 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "extends": ["stylelint-config-standard"],[m
+[32m+[m[32m  "rules": {[m
+[32m+[m[32m    "selector-class-pattern": [[m
+[32m+[m[32m      "^([a-z][a-z0-9]*)(__[a-z][a-z0-9]*)?(--[a-z][a-z0-9]*)?$",[m
+[32m+[m[32m      {[m
+[32m+[m[32m        "message": "Class names must follow BEM format: block__element--modifier"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    ],[m
+[32m+[m[32m    "selector-max-id": 0,[m
+[32m+[m[32m    "selector-no-qualifying-type": true,[m
+[32m+[m[32m    "max-nesting-depth": 1[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/README.md b/README.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b31000a[m
+[1m--- /dev/null[m
+[1m+++ b/README.md[m
+[36m@@ -0,0 +1,124 @@[m
+[32m+[m[32m# Vanilla Cards Architecture[m
+[32m+[m
+[32m+[m[32mWelcome to the **Vanilla Cards** package for Nativa CMS. This architecture is built on pure Vanilla JS, strictly structured CSS using the **BEM methodology**, and optimized bundling via **Vite**.[m
+[32m+[m
+[32m+[m[32mOur primary goal is maximum performance (0kb framework overhead) and maintainable UI components.[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## The Architecture & Flow[m
+[32m+[m
+[32m+[m[32mThe asset pipeline is split into two main layers: **Core** and **Page-Specific Modules**. We do not bundle everything into one massive `app.js` or `style.css`.[m[41m [m
+[32m+[m
+[32m+[m[32m### 1. The Core Bundle (`core-app` & `core-css`)[m
+[32m+[m[32mThe Core is the foundational layer of the design system. It is loaded globally on **every page**.[m
+[32m+[m
+[32m+[m[32m- **What it contains:**[m
+[32m+[m[32m  - **Tokens:** CSS Variables for colors, spacing, typography (`unified.css`).[m
+[32m+[m[32m  - **Components:** BEM styles that are reused everywhere (`button.css`, `vanilla-card.css`, `navbar.css`, `footer.css`).[m
+[32m+[m[32m  - **Infrastructure:** The `SectionLoader` JS class that automatically instantiates sections based on `data-section` attributes.[m
+[32m+[m[32m- **Why?** By keeping global utilities and foundational UI components in one bundle, the browser caches it once, and every subsequent page load feels instantaneous.[m
+[32m+[m
+[32m+[m[32m### 2. Page-Specific Bundles (e.g., `home.ts`)[m
+[32m+[m[32mEach individual page or logical use-case gets its own entry point folder (e.g., `src/frontend/home/`).[m
+[32m+[m
+[32m+[m[32m- **What it contains:**[m
+[32m+[m[32m  - **Styles (`home.css`):** Layout overrides or extremely specific styles that only belong to this page (e.g., a specific background image for the home hero).[m
+[32m+[m[32m  - **Logic (`home.ts`):** Page-specific JavaScript, such as an initialization script or unique third-party library that only this page needs.[m
+[32m+[m[32m- **Why?**[m[41m [m
+[32m+[m[32m  - **Performance:** We prevent "Dead CSS/JS". If a user visits the `/contact` page, they shouldn't be forced to download the CSS or JS for the `/home` page animations.[m
+[32m+[m[32m  - **Isolation:** It prevents CSS conflicts. Page specific styling cannot accidentally break global UI components.[m
+[32m+[m[32m  - **Perfectly aligns with Nativa's `AssetHelper`:** Our PHP backend dynamically injects ONLY the CSS/JS required for the current controller view using `AssetHelper::entryCssTags('home')`.[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## The Asset Pipeline (Vite + PHP)[m
+[32m+[m
+[32m+[m[32mWe use Vite strictly as an asset bundler for the PHP backend, mapping sources to hashed production files.[m
+[32m+[m
+[32m+[m[32m1. **Source Code:** You write modular TS/CSS in `packages/vanilla-cards/src/`.[m
+[32m+[m[32m2. **Vite Build (`pnpm run build`):** Vite processes, minifies, and adds cache-busting hashes to the filenames, outputting them into `dist/`.[m
+[32m+[m[32m3. **Manifest Generation:** Vite generates a `vanilla-cards-manifest.json` file. It maps source files to their new hashed names (e.g., `src/app.ts` -> `core-app.DYSIM4Cj.js`).[m
+[32m+[m[32m4. **PHP Integration (`AssetHelper`):** The Nativa CMS backend reads this manifest. When the backend asks for the `home` entry point, PHP dynamically prints the `<link>` and `<script>` tags for exactly those hashed files.[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## BEM Methodology (Block, Element, Modifier)[m
+[32m+[m
+[32m+[m[32mWe strictly use BEM to keep our CSS flat and highly performant.[m
+[32m+[m
+[32m+[m[32m- **Block:** Standalone entity (`.card`)[m
+[32m+[m[32m- **Element:** Part of a block (`.card__title`)[m
+[32m+[m[32m- **Modifier:** Flag that changes appearance (`.card--featured`)[m
+[32m+[m
+[32m+[m[32m**Best Practice Rule:** Never nest selectors deeply. Instead of `.card .title`, always use `.card__title`. Combine BEM with design tokens (`var(--brand-gold)`).[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## SEO & Accessibility (Lighthouse Best Practices)[m
+[32m+[m
+[32m+[m[32mWhen writing HTML views that consume this architecture, always ensure you follow these standards to keep Lighthouse scores at 100/100:[m
+[32m+[m
+[32m+[m[32m1. **Meta Description:** Every page must include a `<meta name="description" content="...">` tag in the `<head>`.[m
+[32m+[m[32m2. **Main Landmark:** All primary page content (between the `<nav>` and `<footer>`) must be wrapped in a `<main>` tag. This is crucial for screen readers and accessibility.[m
+[32m+[m[32m3. **Valid `robots.txt`:** Ensure the `public/robots.txt` is present and valid so crawlers don't hit a 404.[m
+[32m+[m[32m4. **Preconnects:** Include `<link rel="preconnect" href="/" />` (or to your CDN) to speed up initial network requests.[m
+[32m+[m[32m5. **Preloads:** Our Vite build naturally supports `modulepreload` for JS and `preload` for critical CSS when injected via PHP's `AssetHelper::entryCssTags()`.[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## How to Add a New Page Flow[m
+[32m+[m
+[32m+[m[32mLet's say you are building an `/about` page.[m
+[32m+[m
+[32m+[m[32m### 1. Create the Source Files[m
+[32m+[m[32m```bash[m
+[32m+[m[32mmkdir src/frontend/about[m
+[32m+[m[32mtouch src/frontend/about/about.ts src/frontend/about/about.css[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m**`about.ts`**[m
+[32m+[m[32m```typescript[m
+[32m+[m[32mimport './about.css';[m
+[32m+[m[32mconsole.log('About page initialized!');[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 2. Register it in `vite.config.ts`[m
+[32m+[m[32mUnder `rollupOptions.input`:[m
+[32m+[m[32m```typescript[m
+[32m+[m[32minput: {[m
+[32m+[m[32m  'core-app': resolve(__dirname, 'src/app.ts'),[m
+[32m+[m[32m  'core-css': resolve(__dirname, 'src/css.ts'),[m
+[32m+[m[32m  'home': resolve(__dirname, 'src/frontend/home/home.ts'),[m
+[32m+[m[32m  'about': resolve(__dirname, 'src/frontend/about/about.ts') // <-- NEW[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### 3. Build & Consume[m
+[32m+[m[32mRun `pnpm run build`. The new entry will be generated and logged in the manifest.[m
+[32m+[m
+[32m+[m[32mIn your PHP View (`about.php`):[m
+[32m+[m[32m```php[m
+[32m+[m[32m<?php[m
+[32m+[m[32m// Loads global styles and functionality[m
+[32m+[m[32mecho AssetHelper::entryCssTags('core-css', 'vanilla-cards');[m
+[32m+[m[32m$coreJs = AssetHelper::js('core-app', 'vanilla-cards');[m
+[32m+[m
+[32m+[m[32m// Loads ONLY the about page specific styles and functionality[m
+[32m+[m[32mecho AssetHelper::entryCssTags('about', 'vanilla-cards');[m
+[32m+[m[32m$aboutJs = AssetHelper::js('about', 'vanilla-cards');[m
+[32m+[m[32m?>[m
+[32m+[m[32m<script type="module" src="<?= $coreJs ?>" defer></script>[m
+[32m+[m[32m<script type="module" src="<?= $aboutJs ?>" defer></script>[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mEnjoy building fast, reliable interfaces![m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## Development Rules & CI/CD[m
+[32m+[m
+[32m+[m[32m- **Rules:** For detailed project rules, see [RULES.md](./RULES.md) or [.cursorrules](./.cursorrules).[m
+[32m+[m[32m- **Package Manager:** This project uses `pnpm`.[m
+[32m+[m[32m- **CI/CD:** GitHub Actions automatically builds the project and deploys it to GitHub Pages upon pushing to the `main` branch.[m
+[32m+[m
+[1mdiff --git a/RULES.md b/RULES.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a6c741d[m
+[1m--- /dev/null[m
+[1m+++ b/RULES.md[m
+[36m@@ -0,0 +1,25 @@[m
+[32m+[m[32m# Project Rules and Guidelines[m
+[32m+[m
+[32m+[m[32mThis document outlines the rules and guidelines for development in the Vanilla Cards project.[m
+[32m+[m
+[32m+[m[32m## General Principles[m
+[32m+[m[32m- Use pnpm for package management.[m
+[32m+[m[32m- All code should be written in English.[m
+[32m+[m[32m- No frontend frameworks; use pure Vanilla JS and CSS.[m
+[32m+[m[32m- Maintain a modular architecture.[m
+[32m+[m
+[32m+[m[32m## CSS Rules[m
+[32m+[m[32m- Strictly follow BEM (Block Element Modifier) methodology.[m
+[32m+[m[32m- Use CSS custom properties for styling from the `unified.css` file.[m
+[32m+[m[32m- Do not use deep nesting in CSS.[m
+[32m+[m
+[32m+[m[32m## JavaScript/TypeScript Rules[m
+[32m+[m[32m- Use TypeScript for all logic.[m
+[32m+[m[32m- Sections must be auto-instantiated via the `SectionLoader` and `data-section` attributes.[m
+[32m+[m[32m- Keep the core bundle small; put page-specific logic in dedicated entry points.[m
+[32m+[m
+[32m+[m[32m## GitHub Workflow[m
+[32m+[m[32m- GitHub Actions is used for CI/CD.[m
+[32m+[m[32m- Every push to the main branch is automatically deployed to GitHub Pages.[m
+[32m+[m[32m- Use Pull Requests for all changes.[m
+[32m+[m[32m- PR descriptions should be clear and follow the provided template.[m
+[1mdiff --git a/index.html b/index.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1088c18[m
+[1m--- /dev/null[m
+[1m+++ b/index.html[m
+[36m@@ -0,0 +1,220 @@[m
+[32m+[m[32m<!DOCTYPE html>[m
+[32m+[m[32m<html lang="en" data-theme="dark">[m
+[32m+[m[32m<head>[m
+[32m+[m[32m  <meta charset="UTF-8" />[m
+[32m+[m[32m  <meta name="viewport" content="width=device-width, initial-scale=1.0" />[m
+[32m+[m[32m  <meta name="description" content="Vanilla Cards Architecture - Fast, lightweight BEM component-based UI for Nativa CMS." />[m
+[32m+[m[32m  <title>Vanilla Cards Preview</title>[m
+[32m+[m[32m  <link rel="icon" type="image/svg+xml" href="favicon.svg" />[m
+[32m+[m[41m  [m
+[32m+[m[32m  <!-- Init script (blocks rendering, prevents FOUC) -->[m
+[32m+[m[32m  <script type="module" src="src/init.ts"></script>[m
+[32m+[m[32m</head>[m
+[32m+[m[32m<body class="home-page">[m
+[32m+[m
+[32m+[m[32m  <!-- NAVBAR SECTION -->[m
+[32m+[m[32m  <nav class="navbar" data-section="navbar">[m
+[32m+[m[32m    <div class="navbar__container">[m
+[32m+[m[32m      <a href="#" class="navbar__brand">[m
+[32m+[m[32m        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">[m
+[32m+[m[32m          <path d="M12 2L2 22h20L12 2z"/>[m
+[32m+[m[32m        </svg>[m
+[32m+[m[32m        Nativa[m
+[32m+[m[32m      </a>[m
+[32m+[m[41m      [m
+[32m+[m[32m      <div class="navbar__menu">[m
+[32m+[m[32m        <a href="#" class="navbar__link is-active">Home</a>[m
+[32m+[m[32m        <a href="#" class="navbar__link">Features</a>[m
+[32m+[m[32m        <a href="#" class="navbar__link">Components</a>[m
+[32m+[m[32m        <a href="#" class="navbar__link">Docs</a>[m
+[32m+[m[32m      </div>[m
+[32m+[m
+[32m+[m[32m      <div class="navbar__actions">[m
+[32m+[m[32m        <!-- Theme switcher (Default vs Neon) for dev preview -->[m
+[32m+[m[32m        <button class="btn btn--outline btn--sm" id="dev-theme-switcher">Neon Mode</button>[m
+[32m+[m[41m        [m
+[32m+[m[32m        <button class="icon-btn theme-toggle" aria-label="Toggle Theme">[m
+[32m+[m[32m          <!-- Sun Icon (shown in dark theme) -->[m
+[32m+[m[32m          <svg class="theme-toggle__sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">[m
+[32m+[m[32m            <circle cx="12" cy="12" r="5"></circle>[m
+[32m+[m[32m            <line x1="12" y1="1" x2="12" y2="3"></line>[m
+[32m+[m[32m            <line x1="12" y1="21" x2="12" y2="23"></line>[m
+[32m+[m[32m            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>[m
+[32m+[m[32m            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>[m
+[32m+[m[32m            <line x1="1" y1="12" x2="3" y2="12"></line>[m
+[32m+[m[32m            <line x1="21" y1="12" x2="23" y2="12"></line>[m
+[32m+[m[32m            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>[m
+[32m+[m[32m            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>[m
+[32m+[m[32m          </svg>[m
+[32m+[m[32m          <!-- Moon Icon (shown in light theme) -->[m
+[32m+[m[32m          <svg class="theme-toggle__moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">[m
+[32m+[m[32m            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>[m
+[32m+[m[32m          </svg>[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m        <button class="btn btn--sm">Login</button>[m
+[32m+[m[32m        <button class="icon-btn navbar__toggle" aria-label="Toggle Menu">[m
+[32m+[m[32m          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">[m
+[32m+[m[32m            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>[m
+[32m+[m[32m          </svg>[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </nav>[m
+[32m+[m
+[32m+[m[32m  <!-- MAIN LANDMARK -->[m
+[32m+[m[32m  <main>[m
+[32m+[m
+[32m+[m[32m  <!-- HERO SECTION -->[m
+[32m+[m[32m  <section class="hero-section hero-section--fw" data-section="hero">[m
+[32m+[m[32m    <div class="hero-section__content">[m
+[32m+[m[32m      <h1 class="hero-section__title">Nativa Vanilla Cards</h1>[m
+[32m+[m[32m      <p class="hero-section__description">[m
+[32m+[m[32m        Fast, lightweight BEM architecture for component-based UI.[m
+[32m+[m[32m      </p>[m
+[32m+[m[32m      <div class="hero-section__buttons">[m
+[32m+[m[32m        <button class="btn btn--lg">Get Started</button>[m
+[32m+[m[32m        <button class="btn btn--outline btn--lg">Documentation</button>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </section>[m
+[32m+[m
+[32m+[m[32m  <!-- FEATURES SECTION -->[m
+[32m+[m[32m  <section class="features-section" data-section="features">[m
+[32m+[m[32m    <div class="container">[m
+[32m+[m[32m      <header class="features-section__header">[m
+[32m+[m[32m        <h2 class="features-section__title">Core Features</h2>[m
+[32m+[m[32m        <p class="features-section__subtitle">Explore what we've built</p>[m
+[32m+[m[32m      </header>[m
+[32m+[m
+[32m+[m[32m      <div class="card-grid card-grid--cols-3">[m
+[32m+[m[32m        <!-- Interactive Card -->[m
+[32m+[m[32m        <article class="card card--interactive">[m
+[32m+[m[32m          <div class="card__header">[m
+[32m+[m[32m            <h3 class="card__title">Lightning Fast</h3>[m
+[32m+[m[32m            <p class="card__subtitle">Zero dependencies</p>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m          <div class="card__body">[m
+[32m+[m[32m            <p>Our vanilla components are extremely small, resulting in better load times and overall performance.</p>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m          <footer class="card__footer">[m
+[32m+[m[32m            <button class="btn btn--secondary btn--sm">Read More</button>[m
+[32m+[m[32m          </footer>[m
+[32m+[m[32m        </article>[m
+[32m+[m
+[32m+[m[32m        <!-- Featured Card -->[m
+[32m+[m[32m        <article class="card card--featured">[m
+[32m+[m[32m          <div class="card__header">[m
+[32m+[m[32m            <h3 class="card__title">BEM Methodology</h3>[m
+[32m+[m[32m            <p class="card__subtitle">Scalable CSS</p>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m          <div class="card__body">[m
+[32m+[m[32m            <p>Strict naming conventions make our styling robust, reusable and independent of page structure.</p>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m          <footer class="card__footer">[m
+[32m+[m[32m            <button class="btn btn--block">Use This</button>[m
+[32m+[m[32m          </footer>[m
+[32m+[m[32m        </article>[m
+[32m+[m
+[32m+[m[32m        <!-- Loading Card State -->[m
+[32m+[m[32m        <article class="card card--loading">[m
+[32m+[m[32m          <div class="card__header">[m
+[32m+[m[32m            <h3 class="card__title">Lazy Loaded</h3>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m          <div class="card__body">[m
+[32m+[m[32m            <p>Loading shimmer effect out of the box.</p>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m        </article>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </section>[m
+[32m+[m
+[32m+[m[32m  <!-- STATS SECTION -->[m
+[32m+[m[32m  <section class="stats-section" data-section="stats">[m
+[32m+[m[32m    <div class="container">[m
+[32m+[m[32m      <div class="stats-grid">[m
+[32m+[m[32m        <div class="stat-item">[m
+[32m+[m[32m          <div class="stat-item__value">100%</div>[m
+[32m+[m[32m          <div class="stat-item__label">Vanilla JS</div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m        <div class="stat-item">[m
+[32m+[m[32m          <div class="stat-item__value">0kb</div>[m
+[32m+[m[32m          <div class="stat-item__label">Framework Overhead</div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m        <div class="stat-item">[m
+[32m+[m[32m          <div class="stat-item__value">8px</div>[m
+[32m+[m[32m          <div class="stat-item__label">Grid System</div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </section>[m
+[32m+[m
+[32m+[m[32m  <!-- CTA SECTION -->[m
+[32m+[m[32m  <section class="cta-section" data-section="cta">[m
+[32m+[m[32m    <div class="container">[m
+[32m+[m[32m      <div class="cta-section__content">[m
+[32m+[m[32m        <h2 class="cta-section__title">Ready to Integrate?</h2>[m
+[32m+[m[32m        <p class="cta-section__description">Plug the Vite bundle into your PHP application easily.</p>[m
+[32m+[m[32m        <div class="cta-section__actions">[m
+[32m+[m[32m          <button class="btn btn--lg">Start Coding</button>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </section>[m
+[32m+[m[32m  </main>[m
+[32m+[m
+[32m+[m[32m  <!-- FOOTER SECTION -->[m
+[32m+[m[32m  <footer class="footer">[m
+[32m+[m[32m    <div class="footer__container">[m
+[32m+[m[32m      <div class="footer__grid">[m
+[32m+[m[32m        <div class="footer__brand">[m
+[32m+[m[32m          <h3 class="footer__brand-name">Nativa</h3>[m
+[32m+[m[32m          <p class="footer__description">[m
+[32m+[m[32m            Building the next generation of web applications with vanilla performance and BEM architecture.[m
+[32m+[m[32m          </p>[m
+[32m+[m[32m        </div>[m
+[32m+[m[41m        [m
+[32m+[m[32m        <div class="footer__column">[m
+[32m+[m[32m          <h4 class="footer__title">Product</h4>[m
+[32m+[m[32m          <ul class="footer__list">[m
+[32m+[m[32m            <li><a href="#" class="footer__link">Features</a></li>[m
+[32m+[m[32m            <li><a href="#" class="footer__link">Components</a></li>[m
+[32m+[m[32m            <li><a href="#" class="footer__link">Pricing</a></li>[m
+[32m+[m[32m          </ul>[m
+[32m+[m[32m        </div>[m
+[32m+[m
+[32m+[m[32m        <div class="footer__column">[m
+[32m+[m[32m          <h4 class="footer__title">Resources</h4>[m
+[32m+[m[32m          <ul class="footer__list">[m
+[32m+[m[32m            <li><a href="#" class="footer__link">Documentation</a></li>[m
+[32m+[m[32m            <li><a href="#" class="footer__link">API Reference</a></li>[m
+[32m+[m[32m            <li><a href="#" class="footer__link">Blog</a></li>[m
+[32m+[m[32m          </ul>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </div>[m
+[32m+[m
+[32m+[m[32m      <div class="footer__bottom">[m
+[32m+[m[32m        <p class="footer__copyright">© 2026 Nativa. All rights reserved.</p>[m
+[32m+[m[32m        <div class="footer__socials">[m
+[32m+[m[32m          <a href="#" class="icon-btn" aria-label="Twitter">[m
+[32m+[m[32m            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>[m
+[32m+[m[32m          </a>[m
+[32m+[m[32m          <a href="#" class="icon-btn" aria-label="GitHub">[m
+[32m+[m[32m            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>[m
+[32m+[m[32m          </a>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </footer>[m
+[32m+[m
+[32m+[m[32m  <!-- Theme Toggle handled by NavbarSection -->[m
+[32m+[m[41m  [m
+[32m+[m[32m  <!-- Dev mode script for toggling the Neon CSS -->[m
+[32m+[m[32m  <script type="module" src="src/dev/theme-switcher.ts"></script>[m
+[32m+[m
+[32m+[m[32m  <!-- Main app bundle (includes core logic) -->[m
+[32m+[m[32m  <script type="module" src="src/app.ts"></script>[m
+[32m+[m
+[32m+[m[32m  <!-- Page specific bundle (home) -->[m
+[32m+[m[32m  <script type="module" src="src/frontend/home/home.ts"></script>[m
+[32m+[m[32m</body>[m
+[32m+[m[32m</html>[m
+[1mdiff --git a/package.json b/package.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..796aed3[m
+[1m--- /dev/null[m
+[1m+++ b/package.json[m
+[36m@@ -0,0 +1,17 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "name": "@nativa/vanilla-cards",[m
+[32m+[m[32m  "version": "0.0.1",[m
+[32m+[m[32m  "description": "Vanilla JS and CSS cards architecture for Nativa CMS",[m
+[32m+[m[32m  "type": "module",[m
+[32m+[m[32m  "engines": {[m
+[32m+[m[32m    "node": ">=20"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "scripts": {[m
+[32m+[m[32m    "dev": "vite",[m
+[32m+[m[32m    "build": "vite build",[m
+[32m+[m[32m    "preview": "vite preview"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "devDependencies": {[m
+[32m+[m[32m    "vite": "^8.0.10"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/packages/theme-neon/package.json b/packages/theme-neon/package.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..da2420f[m
+[1m--- /dev/null[m
+[1m+++ b/packages/theme-neon/package.json[m
+[36m@@ -0,0 +1,20 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "name": "@nativa/theme-neon",[m
+[32m+[m[32m  "version": "0.0.1",[m
+[32m+[m[32m  "description": "Neon theme for Vanilla Cards",[m
+[32m+[m[32m  "main": "src/index.ts",[m
+[32m+[m[32m  "exports": {[m
+[32m+[m[32m    ".": "./src/index.ts",[m
+[32m+[m[32m    "./assets/*": "./src/assets/*"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "files": [[m
+[32m+[m[32m    "src"[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  "keywords": [[m
+[32m+[m[32m    "theme",[m
+[32m+[m[32m    "neon",[m
+[32m+[m[32m    "vanilla-cards"[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  "author": "Nativa",[m
+[32m+[m[32m  "license": "MIT"[m
+[32m+[m[32m}[m
+[1mdiff --git a/packages/theme-neon/src/assets/neon.css b/packages/theme-neon/src/assets/neon.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7d20d20[m
+[1m--- /dev/null[m
+[1m+++ b/packages/theme-neon/src/assets/neon.css[m
+[36m@@ -0,0 +1,61 @@[m
+[32m+[m[32m/* Neon Theme Overrides for Vanilla Cards */[m
+[32m+[m[32m/* These values override the defaults loaded by vanilla-cards unified.css */[m
+[32m+[m
+[32m+[m[32m:root {[m
+[32m+[m[32m  /* Brand Colors Override */[m
+[32m+[m[32m  --brand-gold: #ff00ff; /* Neon Pink */[m
+[32m+[m[32m  --brand-gold-light: #ff66ff;[m
+[32m+[m[32m  --brand-gold-dark: #cc00cc;[m
+[32m+[m
+[32m+[m[32m  --brand-emerald: #00ffcc; /* Cyan */[m
+[32m+[m[32m  --brand-ruby: #ff003c;[m
+[32m+[m[32m  --brand-sapphire: #0066ff;[m
+[32m+[m[32m  --brand-amethyst: #9d00ff;[m
+[32m+[m
+[32m+[m[32m  /* Theme Colors Override */[m
+[32m+[m[32m  --color-bg: #09090b; /* Extremely dark background */[m
+[32m+[m[32m  --color-bg-alt: #121217;[m
+[32m+[m[32m  --color-bg-hover: #1a1a24;[m
+[32m+[m[32m  --color-border: #2a2a35;[m
+[32m+[m[32m  --color-text: #e2e8f0;[m
+[32m+[m[32m  --color-text-muted: #94a3b8;[m
+[32m+[m[32m  --color-text-inverse: #09090b;[m
+[32m+[m
+[32m+[m[32m  /* Typography Override */[m
+[32m+[m[32m  --font-sans: 'Space Grotesk', system-ui, sans-serif;[m
+[32m+[m[41m  [m
+[32m+[m[32m  /* Border Radius Override - Sharp edgy look */[m
+[32m+[m[32m  --radius-sm: 0px;[m
+[32m+[m[32m  --radius-md: 0px;[m
+[32m+[m[32m  --radius-lg: 0px;[m
+[32m+[m[32m  --radius-xl: 0px;[m
+[32m+[m[32m  --radius-2xl: 0px;[m
+[32m+[m
+[32m+[m[32m  /* Shadows Override - Glowing Neon Effects */[m
+[32m+[m[32m  --shadow-xs: 0 0 5px rgba(255, 0, 255, 0.1);[m
+[32m+[m[32m  --shadow-sm: 0 0 10px rgba(255, 0, 255, 0.2);[m
+[32m+[m[32m  --shadow-md: 0 0 15px rgba(255, 0, 255, 0.3);[m
+[32m+[m[32m  --shadow-lg: 0 0 20px rgba(255, 0, 255, 0.4);[m
+[32m+[m[32m  --shadow-xl: 0 0 30px rgba(255, 0, 255, 0.5);[m
+[32m+[m
+[32m+[m[32m  /* Focus Rings with Neon glow */[m
+[32m+[m[32m  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--brand-gold), 0 0 15px var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Light Mode support for Neon Theme (Optional, usually Neon is dark-only, but let's provide a high contrast light version) */[m
+[32m+[m[32m[data-theme="light"] {[m
+[32m+[m[32m  --color-bg: #f4f4f5;[m
+[32m+[m[32m  --color-bg-alt: #ffffff;[m
+[32m+[m[32m  --color-bg-hover: #e4e4e7;[m
+[32m+[m[32m  --color-border: #d4d4d8;[m
+[32m+[m[32m  --color-text: #09090b;[m
+[32m+[m[32m  --color-text-muted: #4b5563;[m
+[32m+[m[32m  --color-text-inverse: #ffffff;[m
+[32m+[m[32m  --brand-gold: #b800b8;[m
+[32m+[m[32m  --brand-gold-dark: #990099;[m
+[32m+[m[32m  --brand-gold-light: #d600d6;[m
+[32m+[m[41m  [m
+[32m+[m[32m  /* Make the glow subtle in light mode */[m
+[32m+[m[32m  --shadow-sm: 0 4px 10px rgba(255, 0, 255, 0.1);[m
+[32m+[m[32m  --shadow-lg: 0 10px 25px rgba(255, 0, 255, 0.15);[m
+[32m+[m[32m}[m
+[1mdiff --git a/packages/theme-neon/src/index.ts b/packages/theme-neon/src/index.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1bed889[m
+[1m--- /dev/null[m
+[1m+++ b/packages/theme-neon/src/index.ts[m
+[36m@@ -0,0 +1,4 @@[m
+[32m+[m[32mexport default {[m
+[32m+[m[32m  name: 'neon',[m
+[32m+[m[32m  cssPath: './assets/neon.css'[m
+[32m+[m[32m};[m
+[1mdiff --git a/pnpm-lock.yaml b/pnpm-lock.yaml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7282b22[m
+[1m--- /dev/null[m
+[1m+++ b/pnpm-lock.yaml[m
+[36m@@ -0,0 +1,497 @@[m
+[32m+[m[32mlockfileVersion: '9.0'[m
+[32m+[m
+[32m+[m[32msettings:[m
+[32m+[m[32m  autoInstallPeers: true[m
+[32m+[m[32m  excludeLinksFromLockfile: false[m
+[32m+[m
+[32m+[m[32mimporters:[m
+[32m+[m
+[32m+[m[32m  .:[m
+[32m+[m[32m    devDependencies:[m
+[32m+[m[32m      vite:[m
+[32m+[m[32m        specifier: ^8.0.10[m
+[32m+[m[32m        version: 8.0.10[m
+[32m+[m
+[32m+[m[32m  packages/theme-neon: {}[m
+[32m+[m
+[32m+[m[32mpackages:[m
+[32m+[m
+[32m+[m[32m  '@emnapi/core@1.10.0':[m
+[32m+[m[32m    resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}[m
+[32m+[m
+[32m+[m[32m  '@emnapi/runtime@1.10.0':[m
+[32m+[m[32m    resolution: {integrity: sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==}[m
+[32m+[m
+[32m+[m[32m  '@emnapi/wasi-threads@1.2.1':[m
+[32m+[m[32m    resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}[m
+[32m+[m
+[32m+[m[32m  '@napi-rs/wasm-runtime@1.1.4':[m
+[32m+[m[32m    resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}[m
+[32m+[m[32m    peerDependencies:[m
+[32m+[m[32m      '@emnapi/core': ^1.7.1[m
+[32m+[m[32m      '@emnapi/runtime': ^1.7.1[m
+[32m+[m
+[32m+[m[32m  '@oxc-project/types@0.127.0':[m
+[32m+[m[32m    resolution: {integrity: sha512-aIYXQBo4lCbO4z0R3FHeucQHpF46l2LbMdxRvqvuRuW2OxdnSkcng5B8+K12spgLDj93rtN3+J2Vac/TIO+ciQ==}[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-android-arm64@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-s70pVGhw4zqGeFnXWvAzJDlvxhlRollagdCCKRgOsgUOH3N1l0LIxf83AtGzmb5SiVM4Hjl5HyarMRfdfj3DaQ==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [android][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-darwin-arm64@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-4ksWc9n0mhlZpZ9PMZgTGjeOPRu8MB1Z3Tz0Mo02eWfWCHMW1zN82Qz/pL/rC+yQa+8ZnutMF0JjJe7PjwasYw==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [darwin][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-darwin-x64@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-SUSDOI6WwUVNcWxd02QEBjLdY1VPHvlEkw6T/8nYG322iYWCTxRb1vzk4E+mWWYehTp7ERibq54LSJGjmouOsw==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [darwin][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-freebsd-x64@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-hwnz3nw9dbJ05EDO/PvcjaaewqqDy7Y1rn1UO81l8iIK1GjenME75dl16ajbvSSMfv66WXSRCYKIqfgq2KCfxw==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [freebsd][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-arm-gnueabihf@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-IS+W7epTcwANmFSQFrS1SivEXHtl1JtuQA9wlxrZTcNi6mx+FDOYrakGevvvTwgj2JvWiK8B29/qD9BELZPyXQ==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm][m
+[32m+[m[32m    os: [linux][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-arm64-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-e6usGaHKW5BMNZOymS1UcEYGowQMWcgZ71Z17Sl/h2+ZziNJ1a9n3Zvcz6LdRyIW5572wBCTH/Z+bKuZouGk9Q==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [glibc][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-arm64-musl@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-b/CgbwAJpmrRLp02RPfhbudf5tZnN9nsPWK82znefso832etkem8H7FSZwxrOI9djcdTP7U6YfNhbRnh7djErg==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [musl][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-ppc64-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-4EII1iNGRUN5WwGbF/kOh/EIkoDN9HsupgLQoXfY+D1oyJm7/F4t5PYU5n8SWZgG0FEwakyM8pGgwcBYruGTlA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [ppc64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [glibc][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-s390x-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-AH8oq3XqQo4IibpVXvPeLDI5pzkpYn0WiZAfT05kFzoJ6tQNzwRdDYQ45M8I/gslbodRZwW8uxLhbSBbkv96rA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [s390x][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [glibc][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-x64-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-cLnjV3xfo7KslbU41Z7z8BH/E1y5mzUYzAqih1d1MDaIGZRCMqTijqLv76/P7fyHuvUcfGsIpqCdddbxLLK9rA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [glibc][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-x64-musl@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-0phclDw1spsL7dUB37sIARuis2tAgomCJXAHZlpt8PXZ4Ba0dRP1e+66lsRqrfhISeN9bEGNjQs+T/Fbd7oYGw==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [musl][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-openharmony-arm64@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-0ag/hEgXOwgw4t8QyQvUCxvEg+V0KBcA6YuOx9g0r02MprutRF5dyljgm3EmR02O292UX7UeS6HzWHAl6KgyhA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [openharmony][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-wasm32-wasi@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-LEXei6vo0E5wTGwpkJ4KoT3OZJRnglwldt5ziLzOlc6qqb55z4tWNq2A+PFqCJuvWWdP53CVhG1Z9NtToDPJrA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [wasm32][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-win32-arm64-msvc@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-gUmyzBl3SPMa6hrqFUth9sVfcLBlYsbMzBx5PlexMroZStgzGqlZ26pYG89rBb45Mnia+oil6YAIFeEWGWhoZA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [win32][m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-win32-x64-msvc@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-3hkiolcUAvPB9FLb3UZdfjVVNWherN1f/skkGWJP/fgSQhYUZpSIRr0/I8ZK9TkF3F7kxvJAk0+IcKvPHk9qQg==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [win32][m
+[32m+[m
+[32m+[m[32m  '@rolldown/pluginutils@1.0.0-rc.17':[m
+[32m+[m[32m    resolution: {integrity: sha512-n8iosDOt6Ig1UhJ2AYqoIhHWh/isz0xpicHTzpKBeotdVsTEcxsSA/i3EVM7gQAj0rU27OLAxCjzlj15IWY7bg==}[m
+[32m+[m
+[32m+[m[32m  '@tybys/wasm-util@0.10.1':[m
+[32m+[m[32m    resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}[m
+[32m+[m
+[32m+[m[32m  detect-libc@2.1.2:[m
+[32m+[m[32m    resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}[m
+[32m+[m[32m    engines: {node: '>=8'}[m
+[32m+[m
+[32m+[m[32m  fdir@6.5.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}[m
+[32m+[m[32m    engines: {node: '>=12.0.0'}[m
+[32m+[m[32m    peerDependencies:[m
+[32m+[m[32m      picomatch: ^3 || ^4[m
+[32m+[m[32m    peerDependenciesMeta:[m
+[32m+[m[32m      picomatch:[m
+[32m+[m[32m        optional: true[m
+[32m+[m
+[32m+[m[32m  fsevents@2.3.3:[m
+[32m+[m[32m    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}[m
+[32m+[m[32m    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}[m
+[32m+[m[32m    os: [darwin][m
+[32m+[m
+[32m+[m[32m  lightningcss-android-arm64@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [android][m
+[32m+[m
+[32m+[m[32m  lightningcss-darwin-arm64@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [darwin][m
+[32m+[m
+[32m+[m[32m  lightningcss-darwin-x64@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-U+QsBp2m/s2wqpUYT/6wnlagdZbtZdndSmut/NJqlCcMLTWp5muCrID+K5UJ6jqD2BFshejCYXniPDbNh73V8w==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [darwin][m
+[32m+[m
+[32m+[m[32m  lightningcss-freebsd-x64@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-JCTigedEksZk3tHTTthnMdVfGf61Fky8Ji2E4YjUTEQX14xiy/lTzXnu1vwiZe3bYe0q+SpsSH/CTeDXK6WHig==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [freebsd][m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-arm-gnueabihf@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-x6rnnpRa2GL0zQOkt6rts3YDPzduLpWvwAF6EMhXFVZXD4tPrBkEFqzGowzCsIWsPjqSK+tyNEODUBXeeVHSkw==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [arm][m
+[32m+[m[32m    os: [linux][m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-arm64-gnu@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-0nnMyoyOLRJXfbMOilaSRcLH3Jw5z9HDNGfT/gwCPgaDjnx0i8w7vBzFLFR1f6CMLKF8gVbebmkUN3fa/kQJpQ==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [glibc][m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-arm64-musl@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [musl][m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-x64-gnu@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [glibc][m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-x64-musl@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [linux][m
+[32m+[m[32m    libc: [musl][m
+[32m+[m
+[32m+[m[32m  lightningcss-win32-arm64-msvc@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [arm64][m
+[32m+[m[32m    os: [win32][m
+[32m+[m
+[32m+[m[32m  lightningcss-win32-x64-msvc@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-Amq9B/SoZYdDi1kFrojnoqPLxYhQ4Wo5XiL8EVJrVsB8ARoC1PWW6VGtT0WKCemjy8aC+louJnjS7U18x3b06Q==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m[32m    cpu: [x64][m
+[32m+[m[32m    os: [win32][m
+[32m+[m
+[32m+[m[32m  lightningcss@1.32.0:[m
+[32m+[m[32m    resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}[m
+[32m+[m[32m    engines: {node: '>= 12.0.0'}[m
+[32m+[m
+[32m+[m[32m  nanoid@3.3.11:[m
+[32m+[m[32m    resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}[m
+[32m+[m[32m    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}[m
+[32m+[m[32m    hasBin: true[m
+[32m+[m
+[32m+[m[32m  picocolors@1.1.1:[m
+[32m+[m[32m    resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}[m
+[32m+[m
+[32m+[m[32m  picomatch@4.0.4:[m
+[32m+[m[32m    resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}[m
+[32m+[m[32m    engines: {node: '>=12'}[m
+[32m+[m
+[32m+[m[32m  postcss@8.5.10:[m
+[32m+[m[32m    resolution: {integrity: sha512-pMMHxBOZKFU6HgAZ4eyGnwXF/EvPGGqUr0MnZ5+99485wwW41kW91A4LOGxSHhgugZmSChL5AlElNdwlNgcnLQ==}[m
+[32m+[m[32m    engines: {node: ^10 || ^12 || >=14}[m
+[32m+[m
+[32m+[m[32m  rolldown@1.0.0-rc.17:[m
+[32m+[m[32m    resolution: {integrity: sha512-ZrT53oAKrtA4+YtBWPQbtPOxIbVDbxT0orcYERKd63VJTF13zPcgXTvD4843L8pcsI7M6MErt8QtON6lrB9tyA==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    hasBin: true[m
+[32m+[m
+[32m+[m[32m  source-map-js@1.2.1:[m
+[32m+[m[32m    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}[m
+[32m+[m[32m    engines: {node: '>=0.10.0'}[m
+[32m+[m
+[32m+[m[32m  tinyglobby@0.2.16:[m
+[32m+[m[32m    resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}[m
+[32m+[m[32m    engines: {node: '>=12.0.0'}[m
+[32m+[m
+[32m+[m[32m  tslib@2.8.1:[m
+[32m+[m[32m    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}[m
+[32m+[m
+[32m+[m[32m  vite@8.0.10:[m
+[32m+[m[32m    resolution: {integrity: sha512-rZuUu9j6J5uotLDs+cAA4O5H4K1SfPliUlQwqa6YEwSrWDZzP4rhm00oJR5snMewjxF5V/K3D4kctsUTsIU9Mw==}[m
+[32m+[m[32m    engines: {node: ^20.19.0 || >=22.12.0}[m
+[32m+[m[32m    hasBin: true[m
+[32m+[m[32m    peerDependencies:[m
+[32m+[m[32m      '@types/node': ^20.19.0 || >=22.12.0[m
+[32m+[m[32m      '@vitejs/devtools': ^0.1.0[m
+[32m+[m[32m      esbuild: ^0.27.0 || ^0.28.0[m
+[32m+[m[32m      jiti: '>=1.21.0'[m
+[32m+[m[32m      less: ^4.0.0[m
+[32m+[m[32m      sass: ^1.70.0[m
+[32m+[m[32m      sass-embedded: ^1.70.0[m
+[32m+[m[32m      stylus: '>=0.54.8'[m
+[32m+[m[32m      sugarss: ^5.0.0[m
+[32m+[m[32m      terser: ^5.16.0[m
+[32m+[m[32m      tsx: ^4.8.1[m
+[32m+[m[32m      yaml: ^2.4.2[m
+[32m+[m[32m    peerDependenciesMeta:[m
+[32m+[m[32m      '@types/node':[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      '@vitejs/devtools':[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      esbuild:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      jiti:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      less:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      sass:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      sass-embedded:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      stylus:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      sugarss:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      terser:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      tsx:[m
+[32m+[m[32m        optional: true[m
+[32m+[m[32m      yaml:[m
+[32m+[m[32m        optional: true[m
+[32m+[m
+[32m+[m[32msnapshots:[m
+[32m+[m
+[32m+[m[32m  '@emnapi/core@1.10.0':[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      '@emnapi/wasi-threads': 1.2.1[m
+[32m+[m[32m      tslib: 2.8.1[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@emnapi/runtime@1.10.0':[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      tslib: 2.8.1[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@emnapi/wasi-threads@1.2.1':[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      tslib: 2.8.1[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      '@emnapi/core': 1.10.0[m
+[32m+[m[32m      '@emnapi/runtime': 1.10.0[m
+[32m+[m[32m      '@tybys/wasm-util': 0.10.1[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@oxc-project/types@0.127.0': {}[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-android-arm64@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-darwin-arm64@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-darwin-x64@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-freebsd-x64@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-arm-gnueabihf@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-arm64-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-arm64-musl@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-ppc64-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-s390x-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-x64-gnu@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-linux-x64-musl@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-openharmony-arm64@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-wasm32-wasi@1.0.0-rc.17':[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      '@emnapi/core': 1.10.0[m
+[32m+[m[32m      '@emnapi/runtime': 1.10.0[m
+[32m+[m[32m      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-win32-arm64-msvc@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/binding-win32-x64-msvc@1.0.0-rc.17':[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  '@rolldown/pluginutils@1.0.0-rc.17': {}[m
+[32m+[m
+[32m+[m[32m  '@tybys/wasm-util@0.10.1':[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      tslib: 2.8.1[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  detect-libc@2.1.2: {}[m
+[32m+[m
+[32m+[m[32m  fdir@6.5.0(picomatch@4.0.4):[m
+[32m+[m[32m    optionalDependencies:[m
+[32m+[m[32m      picomatch: 4.0.4[m
+[32m+[m
+[32m+[m[32m  fsevents@2.3.3:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-android-arm64@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-darwin-arm64@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-darwin-x64@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-freebsd-x64@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-arm-gnueabihf@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-arm64-gnu@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-arm64-musl@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-x64-gnu@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-linux-x64-musl@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-win32-arm64-msvc@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss-win32-x64-msvc@1.32.0:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  lightningcss@1.32.0:[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      detect-libc: 2.1.2[m
+[32m+[m[32m    optionalDependencies:[m
+[32m+[m[32m      lightningcss-android-arm64: 1.32.0[m
+[32m+[m[32m      lightningcss-darwin-arm64: 1.32.0[m
+[32m+[m[32m      lightningcss-darwin-x64: 1.32.0[m
+[32m+[m[32m      lightningcss-freebsd-x64: 1.32.0[m
+[32m+[m[32m      lightningcss-linux-arm-gnueabihf: 1.32.0[m
+[32m+[m[32m      lightningcss-linux-arm64-gnu: 1.32.0[m
+[32m+[m[32m      lightningcss-linux-arm64-musl: 1.32.0[m
+[32m+[m[32m      lightningcss-linux-x64-gnu: 1.32.0[m
+[32m+[m[32m      lightningcss-linux-x64-musl: 1.32.0[m
+[32m+[m[32m      lightningcss-win32-arm64-msvc: 1.32.0[m
+[32m+[m[32m      lightningcss-win32-x64-msvc: 1.32.0[m
+[32m+[m
+[32m+[m[32m  nanoid@3.3.11: {}[m
+[32m+[m
+[32m+[m[32m  picocolors@1.1.1: {}[m
+[32m+[m
+[32m+[m[32m  picomatch@4.0.4: {}[m
+[32m+[m
+[32m+[m[32m  postcss@8.5.10:[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      nanoid: 3.3.11[m
+[32m+[m[32m      picocolors: 1.1.1[m
+[32m+[m[32m      source-map-js: 1.2.1[m
+[32m+[m
+[32m+[m[32m  rolldown@1.0.0-rc.17:[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      '@oxc-project/types': 0.127.0[m
+[32m+[m[32m      '@rolldown/pluginutils': 1.0.0-rc.17[m
+[32m+[m[32m    optionalDependencies:[m
+[32m+[m[32m      '@rolldown/binding-android-arm64': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-darwin-arm64': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-darwin-x64': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-freebsd-x64': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-arm-gnueabihf': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-arm64-gnu': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-arm64-musl': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-ppc64-gnu': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-s390x-gnu': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-x64-gnu': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-linux-x64-musl': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-openharmony-arm64': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-wasm32-wasi': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-win32-arm64-msvc': 1.0.0-rc.17[m
+[32m+[m[32m      '@rolldown/binding-win32-x64-msvc': 1.0.0-rc.17[m
+[32m+[m
+[32m+[m[32m  source-map-js@1.2.1: {}[m
+[32m+[m
+[32m+[m[32m  tinyglobby@0.2.16:[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      fdir: 6.5.0(picomatch@4.0.4)[m
+[32m+[m[32m      picomatch: 4.0.4[m
+[32m+[m
+[32m+[m[32m  tslib@2.8.1:[m
+[32m+[m[32m    optional: true[m
+[32m+[m
+[32m+[m[32m  vite@8.0.10:[m
+[32m+[m[32m    dependencies:[m
+[32m+[m[32m      lightningcss: 1.32.0[m
+[32m+[m[32m      picomatch: 4.0.4[m
+[32m+[m[32m      postcss: 8.5.10[m
+[32m+[m[32m      rolldown: 1.0.0-rc.17[m
+[32m+[m[32m      tinyglobby: 0.2.16[m
+[32m+[m[32m    optionalDependencies:[m
+[32m+[m[32m      fsevents: 2.3.3[m
+[1mdiff --git a/pnpm-workspace.yaml b/pnpm-workspace.yaml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..eac6501[m
+[1m--- /dev/null[m
+[1m+++ b/pnpm-workspace.yaml[m
+[36m@@ -0,0 +1,5 @@[m
+[32m+[m[32mpackages:[m
+[32m+[m[32m  - '.'[m
+[32m+[m[32m  - 'packages/*'[m
+[32m+[m[32mallowBuilds:[m
+[32m+[m[32m  esbuild: true[m
+[1mdiff --git a/public/.nojekyll b/public/.nojekyll[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e69de29[m
+[1mdiff --git a/public/favicon.ico b/public/favicon.ico[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ac4d2fa[m
+Binary files /dev/null and b/public/favicon.ico differ
+[1mdiff --git a/public/favicon.svg b/public/favicon.svg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d2dd9fd[m
+[1m--- /dev/null[m
+[1m+++ b/public/favicon.svg[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32m<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d4af37">[m
+[32m+[m[32m  <path d="M12 2L2 22h20L12 2z"/>[m
+[32m+[m[32m</svg>[m
+\ No newline at end of file[m
+[1mdiff --git a/public/robots.txt b/public/robots.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c2a49f4[m
+[1m--- /dev/null[m
+[1m+++ b/public/robots.txt[m
+[36m@@ -0,0 +1,2 @@[m
+[32m+[m[32mUser-agent: *[m
+[32m+[m[32mAllow: /[m
+[1mdiff --git a/src/app.ts b/src/app.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..31318e2[m
+[1m--- /dev/null[m
+[1m+++ b/src/app.ts[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32mimport './css.ts';[m
+[32m+[m[32mimport { SectionLoader } from './core/sections/SectionLoader.ts';[m
+[32m+[m
+[32m+[m[32mdocument.addEventListener('DOMContentLoaded', () => {[m
+[32m+[m[32m  SectionLoader.loadSections();[m
+[32m+[m[32m});[m
+[1mdiff --git a/src/assets/fonts/inter/Inter-Regular.woff2 b/src/assets/fonts/inter/Inter-Regular.woff2[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2bcd222[m
+Binary files /dev/null and b/src/assets/fonts/inter/Inter-Regular.woff2 differ
+[1mdiff --git a/src/assets/fonts/playfair/PlayfairDisplay-Bold.woff2 b/src/assets/fonts/playfair/PlayfairDisplay-Bold.woff2[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e3842bf[m
+Binary files /dev/null and b/src/assets/fonts/playfair/PlayfairDisplay-Bold.woff2 differ
+[1mdiff --git a/src/assets/fonts/playfair/PlayfairDisplay-Regular.woff2 b/src/assets/fonts/playfair/PlayfairDisplay-Regular.woff2[m
+[1mnew file mode 100644[m
+[1mindex 0000000..fc42237[m
+Binary files /dev/null and b/src/assets/fonts/playfair/PlayfairDisplay-Regular.woff2 differ
+[1mdiff --git a/src/core/components/button.css b/src/core/components/button.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1216a41[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/button.css[m
+[36m@@ -0,0 +1,103 @@[m
+[32m+[m[32m.btn {[m
+[32m+[m[32m  display: inline-flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  justify-content: center;[m
+[32m+[m[32m  gap: var(--space-2);[m
+[32m+[m[32m  padding: var(--space-2) var(--space-4);[m
+[32m+[m[32m  font-family: var(--font-sans);[m
+[32m+[m[32m  font-size: var(--text-base);[m
+[32m+[m[32m  font-weight: var(--font-medium);[m
+[32m+[m[32m  color: var(--color-text-inverse);[m
+[32m+[m[32m  background-color: var(--brand-gold);[m
+[32m+[m[32m  border: 1px solid transparent;[m
+[32m+[m[32m  border-radius: var(--radius-md);[m
+[32m+[m[32m  cursor: pointer;[m
+[32m+[m[32m  transition: all var(--transition-fast);[m
+[32m+[m[32m  text-decoration: none;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn:hover:not(:disabled) {[m
+[32m+[m[32m  background-color: var(--brand-gold-dark);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn:focus-visible {[m
+[32m+[m[32m  outline: none;[m
+[32m+[m[32m  box-shadow: var(--focus-ring);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn:disabled, .btn.is-disabled {[m
+[32m+[m[32m  opacity: 0.6;[m
+[32m+[m[32m  cursor: not-allowed;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Modifiers */[m
+[32m+[m[32m.btn--outline {[m
+[32m+[m[32m  background-color: transparent;[m
+[32m+[m[32m  color: var(--brand-gold);[m
+[32m+[m[32m  border-color: var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m[32m.btn--outline:hover:not(:disabled) {[m
+[32m+[m[32m  background-color: rgba(212, 175, 55, 0.1);[m
+[32m+[m[32m  color: var(--brand-gold-dark);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn--secondary {[m
+[32m+[m[32m  background-color: var(--color-bg-alt);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  border-color: var(--color-border);[m
+[32m+[m[32m}[m
+[32m+[m[32m.btn--secondary:hover:not(:disabled) {[m
+[32m+[m[32m  background-color: var(--color-bg-hover);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn--ghost {[m
+[32m+[m[32m  background-color: transparent;[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m}[m
+[32m+[m[32m.btn--ghost:hover:not(:disabled) {[m
+[32m+[m[32m  background-color: var(--color-bg-alt);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Sizes */[m
+[32m+[m[32m.btn--sm {[m
+[32m+[m[32m  padding: var(--space-1) var(--space-3);[m
+[32m+[m[32m  font-size: var(--text-sm);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn--lg {[m
+[32m+[m[32m  padding: var(--space-3) var(--space-6);[m
+[32m+[m[32m  font-size: var(--text-lg);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn--xl {[m
+[32m+[m[32m  padding: var(--space-4) var(--space-8);[m
+[32m+[m[32m  font-size: var(--text-xl);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Layout */[m
+[32m+[m[32m.btn--block {[m
+[32m+[m[32m  width: 100%;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn--square {[m
+[32m+[m[32m  padding: var(--space-2);[m
+[32m+[m[32m  aspect-ratio: 1;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Elements */[m
+[32m+[m[32m.btn__spinner {[m
+[32m+[m[32m  width: 1em;[m
+[32m+[m[32m  height: 1em;[m
+[32m+[m[32m  border: 2px solid currentColor;[m
+[32m+[m[32m  border-right-color: transparent;[m
+[32m+[m[32m  border-radius: 50%;[m
+[32m+[m[32m  animation: spin 0.75s linear infinite;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m@keyframes spin {[m
+[32m+[m[32m  to { transform: rotate(360deg); }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.btn--loading {[m
+[32m+[m[32m  pointer-events: none;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/components/card-grid.css b/src/core/components/card-grid.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a4bb15b[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/card-grid.css[m
+[36m@@ -0,0 +1,40 @@[m
+[32m+[m[32m.card-grid {[m
+[32m+[m[32m  display: grid;[m
+[32m+[m[32m  gap: var(--space-6);[m
+[32m+[m[32m  width: 100%;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card-grid--cols-1 {[m
+[32m+[m[32m  grid-template-columns: 1fr;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card-grid--cols-2 {[m
+[32m+[m[32m  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 768px) {[m
+[32m+[m[32m  .card-grid--cols-2 {[m
+[32m+[m[32m    grid-template-columns: repeat(2, 1fr);[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card-grid--cols-3 {[m
+[32m+[m[32m  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 1024px) {[m
+[32m+[m[32m  .card-grid--cols-3 {[m
+[32m+[m[32m    grid-template-columns: repeat(3, 1fr);[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card-grid--cols-4 {[m
+[32m+[m[32m  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 1280px) {[m
+[32m+[m[32m  .card-grid--cols-4 {[m
+[32m+[m[32m    grid-template-columns: repeat(4, 1fr);[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card-grid--auto-fit {[m
+[32m+[m[32m  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/components/footer.css b/src/core/components/footer.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..5f1c168[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/footer.css[m
+[36m@@ -0,0 +1,90 @@[m
+[32m+[m[32m.footer {[m
+[32m+[m[32m  background-color: var(--color-bg-alt);[m
+[32m+[m[32m  border-top: 1px solid var(--color-border);[m
+[32m+[m[32m  padding: var(--space-12) 0 var(--space-6);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__container {[m
+[32m+[m[32m  max-width: 1200px;[m
+[32m+[m[32m  margin: 0 auto;[m
+[32m+[m[32m  padding: 0 var(--space-8);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__grid {[m
+[32m+[m[32m  display: grid;[m
+[32m+[m[32m  grid-template-columns: 1fr;[m
+[32m+[m[32m  gap: var(--space-8);[m
+[32m+[m[32m  margin-bottom: var(--space-12);[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 768px) {[m
+[32m+[m[32m  .footer__grid {[m
+[32m+[m[32m    grid-template-columns: 2fr 1fr 1fr;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__brand {[m
+[32m+[m[32m  margin-bottom: var(--space-4);[m
+[32m+[m[32m}[m
+[32m+[m[32m.footer__brand-name {[m
+[32m+[m[32m  font-size: var(--text-2xl);[m
+[32m+[m[32m  font-weight: var(--font-bold);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  margin: 0 0 var(--space-2);[m
+[32m+[m[32m}[m
+[32m+[m[32m.footer__description {[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  line-height: 1.6;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__title {[m
+[32m+[m[32m  font-size: var(--text-base);[m
+[32m+[m[32m  font-weight: var(--font-semibold);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  margin: 0 0 var(--space-4);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__list {[m
+[32m+[m[32m  list-style: none;[m
+[32m+[m[32m  padding: 0;[m
+[32m+[m[32m  margin: 0;[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  gap: var(--space-3);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__link {[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  text-decoration: none;[m
+[32m+[m[32m  transition: color var(--transition-fast);[m
+[32m+[m[32m}[m
+[32m+[m[32m.footer__link:hover {[m
+[32m+[m[32m  color: var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__bottom {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  gap: var(--space-4);[m
+[32m+[m[32m  padding-top: var(--space-6);[m
+[32m+[m[32m  border-top: 1px solid var(--color-border);[m
+[32m+[m[32m  text-align: center;[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 768px) {[m
+[32m+[m[32m  .footer__bottom {[m
+[32m+[m[32m    flex-direction: row;[m
+[32m+[m[32m    justify-content: space-between;[m
+[32m+[m[32m    text-align: left;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__copyright {[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  font-size: var(--text-sm);[m
+[32m+[m[32m  margin: 0;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.footer__socials {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  gap: var(--space-4);[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/components/icon-button.css b/src/core/components/icon-button.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3845c8a[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/icon-button.css[m
+[36m@@ -0,0 +1,41 @@[m
+[32m+[m[32m.icon-btn {[m
+[32m+[m[32m  display: inline-flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  justify-content: center;[m
+[32m+[m[32m  padding: var(--space-2);[m
+[32m+[m[32m  background: transparent;[m
+[32m+[m[32m  border: 1px solid transparent;[m
+[32m+[m[32m  border-radius: var(--radius-md);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  cursor: pointer;[m
+[32m+[m[32m  transition: all var(--transition-fast);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.icon-btn:hover:not(:disabled) {[m
+[32m+[m[32m  background-color: var(--color-bg-alt);[m
+[32m+[m[32m  color: var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.icon-btn:focus-visible {[m
+[32m+[m[32m  outline: none;[m
+[32m+[m[32m  box-shadow: var(--focus-ring);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.icon-btn:disabled {[m
+[32m+[m[32m  opacity: 0.5;[m
+[32m+[m[32m  cursor: not-allowed;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Theme Toggle Icons */[m
+[32m+[m[32m.theme-toggle__sun,[m
+[32m+[m[32m.theme-toggle__moon {[m
+[32m+[m[32m  display: none;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m[data-theme="dark"] .theme-toggle__sun {[m
+[32m+[m[32m  display: block;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m[data-theme="light"] .theme-toggle__moon {[m
+[32m+[m[32m  display: block;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/components/icon.css b/src/core/components/icon.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..aff1417[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/icon.css[m
+[36m@@ -0,0 +1,19 @@[m
+[32m+[m[32m.icon {[m
+[32m+[m[32m  display: inline-flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  justify-content: center;[m
+[32m+[m[32m  line-height: 1;[m
+[32m+[m[32m  vertical-align: middle;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.icon svg {[m
+[32m+[m[32m  width: 1em;[m
+[32m+[m[32m  height: 1em;[m
+[32m+[m[32m  fill: currentColor;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.icon--xs { font-size: 0.75rem; }  /* 12px */[m
+[32m+[m[32m.icon--sm { font-size: 1rem; }     /* 16px */[m
+[32m+[m[32m.icon--md { font-size: 1.25rem; }  /* 20px */[m
+[32m+[m[32m.icon--lg { font-size: 1.5rem; }   /* 24px */[m
+[32m+[m[32m.icon--xl { font-size: 2rem; }     /* 32px */[m
+[1mdiff --git a/src/core/components/navbar.css b/src/core/components/navbar.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0a16bfe[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/navbar.css[m
+[36m@@ -0,0 +1,80 @@[m
+[32m+[m[32m.navbar {[m
+[32m+[m[32m  position: sticky;[m
+[32m+[m[32m  top: 0;[m
+[32m+[m[32m  z-index: 100;[m
+[32m+[m[32m  background-color: var(--color-bg);[m
+[32m+[m[32m  border-bottom: 1px solid var(--color-border);[m
+[32m+[m[32m  backdrop-filter: blur(10px);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.navbar__container {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  justify-content: space-between;[m
+[32m+[m[32m  height: 4rem; /* 64px */[m
+[32m+[m[32m  padding: 0 var(--space-8);[m
+[32m+[m[32m  max-width: 1200px;[m
+[32m+[m[32m  margin: 0 auto;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.navbar__brand {[m
+[32m+[m[32m  font-size: var(--text-xl);[m
+[32m+[m[32m  font-weight: var(--font-bold);[m
+[32m+[m[32m  color: var(--brand-gold);[m
+[32m+[m[32m  text-decoration: none;[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  gap: var(--space-2);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.navbar__menu {[m
+[32m+[m[32m  display: none;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  gap: var(--space-6);[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 768px) {[m
+[32m+[m[32m  .navbar__menu {[m
+[32m+[m[32m    display: flex;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.navbar__link {[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  text-decoration: none;[m
+[32m+[m[32m  font-size: var(--text-sm);[m
+[32m+[m[32m  font-weight: var(--font-medium);[m
+[32m+[m[32m  transition: color var(--transition-fast);[m
+[32m+[m[32m}[m
+[32m+[m[32m.navbar__link:hover,[m
+[32m+[m[32m.navbar__link.is-active {[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.navbar__actions {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  gap: var(--space-3);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.navbar__toggle {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m}[m
+[32m+[m[32m@media (min-width: 768px) {[m
+[32m+[m[32m  .navbar__toggle.icon-btn {[m
+[32m+[m[32m    display: none;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Mobile Menu State */[m
+[32m+[m[32m.navbar--menu-open .navbar__menu {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  position: absolute;[m
+[32m+[m[32m  top: 100%;[m
+[32m+[m[32m  left: 0;[m
+[32m+[m[32m  right: 0;[m
+[32m+[m[32m  background-color: var(--color-bg);[m
+[32m+[m[32m  padding: var(--space-6);[m
+[32m+[m[32m  border-bottom: 1px solid var(--color-border);[m
+[32m+[m[32m  box-shadow: var(--shadow-md);[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/components/vanilla-card.css b/src/core/components/vanilla-card.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9f3e582[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/components/vanilla-card.css[m
+[36m@@ -0,0 +1,134 @@[m
+[32m+[m[32m.card {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  background-color: var(--color-bg);[m
+[32m+[m[32m  border: 1px solid var(--color-border);[m
+[32m+[m[32m  border-radius: var(--radius-lg);[m
+[32m+[m[32m  overflow: hidden;[m
+[32m+[m[32m  transition: transform var(--transition-transform), box-shadow var(--transition-transform), border-color var(--transition-fast);[m
+[32m+[m[41m  [m
+[32m+[m[32m  /* Default internal spacing token */[m
+[32m+[m[32m  --card-padding: var(--space-4);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__header {[m
+[32m+[m[32m  padding: var(--card-padding);[m
+[32m+[m[32m  border-bottom: 1px solid var(--color-border);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__title {[m
+[32m+[m[32m  margin: 0;[m
+[32m+[m[32m  font-size: var(--text-lg);[m
+[32m+[m[32m  font-weight: var(--font-semibold);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__subtitle {[m
+[32m+[m[32m  margin: var(--space-1) 0 0;[m
+[32m+[m[32m  font-size: var(--text-sm);[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__body {[m
+[32m+[m[32m  padding: var(--card-padding);[m
+[32m+[m[32m  flex-grow: 1;[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__footer {[m
+[32m+[m[32m  padding: var(--card-padding);[m
+[32m+[m[32m  border-top: 1px solid var(--color-border);[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  gap: var(--space-3);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__image {[m
+[32m+[m[32m  width: 100%;[m
+[32m+[m[32m  height: auto;[m
+[32m+[m[32m  object-fit: cover;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/* Modifiers */[m
+[32m+[m[32m.card--interactive {[m
+[32m+[m[32m  cursor: pointer;[m
+[32m+[m[32m}[m
+[32m+[m[32m.card--interactive:hover {[m
+[32m+[m[32m  transform: translateY(-4px);[m
+[32m+[m[32m  box-shadow: var(--shadow-lg);[m
+[32m+[m[32m  border-color: var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card__link {[m
+[32m+[m[32m  text-decoration: none;[m
+[32m+[m[32m  color: inherit;[m
+[32m+[m[32m  display: block;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--featured {[m
+[32m+[m[32m  border-color: var(--brand-gold);[m
+[32m+[m[32m  box-shadow: var(--shadow-sm);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--compact {[m
+[32m+[m[32m  --card-padding: var(--space-3);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--large {[m
+[32m+[m[32m  --card-padding: var(--space-6);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--glass {[m
+[32m+[m[32m  background-color: rgba(255, 255, 255, 0.05);[m
+[32m+[m[32m  backdrop-filter: blur(10px);[m
+[32m+[m[32m  border-color: rgba(255, 255, 255, 0.1);[m
+[32m+[m[32m}[m
+[32m+[m[32m[data-theme="light"] .card--glass {[m
+[32m+[m[32m  background-color: rgba(0, 0, 0, 0.02);[m
+[32m+[m[32m  border-color: rgba(0, 0, 0, 0.05);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--horizontal {[m
+[32m+[m[32m  flex-direction: row;[m
+[32m+[m[32m}[m
+[32m+[m[32m.card--horizontal .card__media {[m
+[32m+[m[32m  flex-shrink: 0;[m
+[32m+[m[32m  width: 30%;[m
+[32m+[m[32m}[m
+[32m+[m[32m.card--horizontal .card__image {[m
+[32m+[m[32m  height: 100%;[m
+[32m+[m[32m}[m
+[32m+[m[32m.card--horizontal .card__content {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  flex-grow: 1;[m
+[32m+[m[32m  padding: var(--card-padding);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--loading {[m
+[32m+[m[32m  position: relative;[m
+[32m+[m[32m  overflow: hidden;[m
+[32m+[m[32m}[m
+[32m+[m[32m.card--loading::after {[m
+[32m+[m[32m  content: "";[m
+[32m+[m[32m  position: absolute;[m
+[32m+[m[32m  top: 0; right: 0; bottom: 0; left: 0;[m
+[32m+[m[32m  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);[m
+[32m+[m[32m  animation: shimmer 1.5s infinite;[m
+[32m+[m[32m}[m
+[32m+[m[32m[data-theme="light"] .card--loading::after {[m
+[32m+[m[32m  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m@keyframes shimmer {[m
+[32m+[m[32m  0% { transform: translateX(-100%); }[m
+[32m+[m[32m  100% { transform: translateX(100%); }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--error {[m
+[32m+[m[32m  border-color: var(--brand-ruby);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.card--success {[m
+[32m+[m[32m  border-color: var(--brand-emerald);[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/BaseSection.ts b/src/core/sections/BaseSection.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..300abc5[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/BaseSection.ts[m
+[36m@@ -0,0 +1,57 @@[m
+[32m+[m[32mexport abstract class BaseSection {[m
+[32m+[m[32m  constructor(protected element: HTMLElement) {}[m
+[32m+[m
+[32m+[m[32m  abstract init(): void;[m
+[32m+[m
+[32m+[m[32m  protected isInViewport(el: Element, threshold = 0): boolean {[m
+[32m+[m[32m    const rect = el.getBoundingClientRect();[m
+[32m+[m[32m    const windowHeight = window.innerHeight || document.documentElement.clientHeight;[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      rect.top >= -threshold * windowHeight &&[m
+[32m+[m[32m      rect.bottom <= windowHeight * (1 + threshold)[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  protected observe([m
+[32m+[m[32m    selector: string,[m
+[32m+[m[32m    options: IntersectionObserverInit,[m
+[32m+[m[32m    callback: (element: Element, entry: IntersectionObserverEntry) => void,[m
+[32m+[m[32m    immediate = true[m
+[32m+[m[32m  ): void {[m
+[32m+[m[32m    const elements = this.element.querySelectorAll(selector);[m
+[32m+[m[32m    if (!elements.length) return;[m
+[32m+[m
+[32m+[m[32m    const observer = new IntersectionObserver((entries, obs) => {[m
+[32m+[m[32m      entries.forEach(entry => {[m
+[32m+[m[32m        if (entry.isIntersecting) {[m
+[32m+[m[32m          callback(entry.target, entry);[m
+[32m+[m[32m          obs.unobserve(entry.target);[m
+[32m+[m[32m        }[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }, options);[m
+[32m+[m
+[32m+[m[32m    elements.forEach(el => {[m
+[32m+[m[32m      if (immediate && this.isInViewport(el, (options.threshold as number) || 0)) {[m
+[32m+[m[32m        callback(el, null as any);[m
+[32m+[m[32m      } else {[m
+[32m+[m[32m        observer.observe(el);[m
+[32m+[m[32m      }[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  protected observeSelf([m
+[32m+[m[32m    options: IntersectionObserverInit,[m
+[32m+[m[32m    callback: (element: HTMLElement, entry: IntersectionObserverEntry) => void[m
+[32m+[m[32m  ): void {[m
+[32m+[m[32m    const observer = new IntersectionObserver((entries, obs) => {[m
+[32m+[m[32m      entries.forEach(entry => {[m
+[32m+[m[32m        if (entry.isIntersecting) {[m
+[32m+[m[32m          callback(this.element, entry);[m
+[32m+[m[32m          obs.unobserve(this.element);[m
+[32m+[m[32m        }[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }, options);[m
+[32m+[m
+[32m+[m[32m    observer.observe(this.element);[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/SectionLoader.ts b/src/core/sections/SectionLoader.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3017e9b[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/SectionLoader.ts[m
+[36m@@ -0,0 +1,29 @@[m
+[32m+[m[32mimport { BaseSection } from './BaseSection.ts';[m
+[32m+[m[32mimport { HeroSection } from './hero/HeroSection.ts';[m
+[32m+[m[32mimport { FeaturesSection } from './features/FeaturesSection.ts';[m
+[32m+[m[32mimport { CTASection } from './cta/CTASection.ts';[m
+[32m+[m[32mimport { StatsSection } from './stats/StatsSection.ts';[m
+[32m+[m[32mimport { NavbarSection } from './navbar/NavbarSection.ts';[m
+[32m+[m
+[32m+[m[32mconst sectionMap: Record<string, new (el: HTMLElement) => BaseSection> = {[m
+[32m+[m[32m  hero: HeroSection,[m
+[32m+[m[32m  features: FeaturesSection,[m
+[32m+[m[32m  cta: CTASection,[m
+[32m+[m[32m  stats: StatsSection,[m
+[32m+[m[32m  navbar: NavbarSection,[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mexport class SectionLoader {[m
+[32m+[m[32m  static loadSections() {[m
+[32m+[m[32m    const sectionElements = document.querySelectorAll('[data-section]');[m
+[32m+[m[41m    [m
+[32m+[m[32m    sectionElements.forEach((el) => {[m
+[32m+[m[32m      const sectionName = el.getAttribute('data-section');[m
+[32m+[m[32m      if (sectionName && sectionMap[sectionName]) {[m
+[32m+[m[32m        const SectionClass = sectionMap[sectionName];[m
+[32m+[m[32m        const sectionInstance = new SectionClass(el as HTMLElement);[m
+[32m+[m[32m        sectionInstance.init();[m
+[32m+[m[32m      }[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/cta/CTASection.ts b/src/core/sections/cta/CTASection.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0bf2a9a[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/cta/CTASection.ts[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32mimport { BaseSection } from '../BaseSection.ts';[m
+[32m+[m
+[32m+[m[32mexport class CTASection extends BaseSection {[m
+[32m+[m[32m  init(): void {[m
+[32m+[m[32m    // Simple fade in for CTA[m
+[32m+[m[32m    this.element.style.opacity = '0';[m
+[32m+[m[32m    this.element.style.transition = 'opacity 0.8s ease';[m
+[32m+[m
+[32m+[m[32m    this.observeSelf({ threshold: 0.2 }, () => {[m
+[32m+[m[32m      this.element.style.opacity = '1';[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/cta/cta.css b/src/core/sections/cta/cta.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..5104035[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/cta/cta.css[m
+[36m@@ -0,0 +1,34 @@[m
+[32m+[m[32m.cta-section {[m
+[32m+[m[32m  padding: var(--space-16) var(--space-8);[m
+[32m+[m[32m  background-color: var(--color-bg);[m
+[32m+[m[32m  text-align: center;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.cta-section__content {[m
+[32m+[m[32m  max-width: 800px;[m
+[32m+[m[32m  margin: 0 auto;[m
+[32m+[m[32m  padding: var(--space-12) var(--space-6);[m
+[32m+[m[32m  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);[m
+[32m+[m[32m  border: 1px solid var(--brand-gold);[m
+[32m+[m[32m  border-radius: var(--radius-2xl);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.cta-section__title {[m
+[32m+[m[32m  font-size: var(--text-4xl);[m
+[32m+[m[32m  font-weight: var(--font-bold);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  margin: 0 0 var(--space-4);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.cta-section__description {[m
+[32m+[m[32m  font-size: var(--text-xl);[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  margin: 0 0 var(--space-8);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.cta-section__actions {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  gap: var(--space-4);[m
+[32m+[m[32m  justify-content: center;[m
+[32m+[m[32m  flex-wrap: wrap;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/features/FeaturesSection.ts b/src/core/sections/features/FeaturesSection.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1460521[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/features/FeaturesSection.ts[m
+[36m@@ -0,0 +1,27 @@[m
+[32m+[m[32mimport { BaseSection } from '../BaseSection.ts';[m
+[32m+[m
+[32m+[m[32mexport class FeaturesSection extends BaseSection {[m
+[32m+[m[32m  init(): void {[m
+[32m+[m[32m    this.initCardsStagger();[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private initCardsStagger(): void {[m
+[32m+[m[32m    const cards = this.element.querySelectorAll('.card');[m
+[32m+[m[32m    if (!cards.length) return;[m
+[32m+[m
+[32m+[m[32m    cards.forEach((card, index) => {[m
+[32m+[m[32m      const el = card as HTMLElement;[m
+[32m+[m[32m      el.style.opacity = '0';[m
+[32m+[m[32m      el.style.transform = 'translateY(20px)';[m
+[32m+[m[32m      el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;[m
+[32m+[m[32m    });[m
+[32m+[m
+[32m+[m[32m    this.observeSelf({ threshold: 0.1 }, () => {[m
+[32m+[m[32m      cards.forEach((card) => {[m
+[32m+[m[32m        const el = card as HTMLElement;[m
+[32m+[m[32m        el.style.opacity = '1';[m
+[32m+[m[32m        el.style.transform = 'translateY(0)';[m
+[32m+[m[32m      });[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/features/features.css b/src/core/sections/features/features.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d0e3af8[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/features/features.css[m
+[36m@@ -0,0 +1,32 @@[m
+[32m+[m[32m.features-section {[m
+[32m+[m[32m  padding: var(--space-16) var(--space-8);[m
+[32m+[m[32m  background-color: var(--color-bg-alt);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.features-section__header {[m
+[32m+[m[32m  text-align: center;[m
+[32m+[m[32m  margin-bottom: var(--space-12);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.features-section__title {[m
+[32m+[m[32m  font-size: var(--text-3xl);[m
+[32m+[m[32m  font-weight: var(--font-bold);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  margin: 0 0 var(--space-2);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.features-section__subtitle {[m
+[32m+[m[32m  font-size: var(--text-lg);[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  margin: 0;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.features-section .card__icon {[m
+[32m+[m[32m  margin-bottom: var(--space-4);[m
+[32m+[m[32m  color: var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.container {[m
+[32m+[m[32m  max-width: 1200px;[m
+[32m+[m[32m  margin: 0 auto;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/hero/HeroSection.ts b/src/core/sections/hero/HeroSection.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ee8107c[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/hero/HeroSection.ts[m
+[36m@@ -0,0 +1,36 @@[m
+[32m+[m[32mimport { BaseSection } from '../BaseSection.ts';[m
+[32m+[m
+[32m+[m[32mexport class HeroSection extends BaseSection {[m
+[32m+[m[32m  init(): void {[m
+[32m+[m[32m    this.initTitleReveal();[m
+[32m+[m[32m    this.initDescriptionFade();[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private initTitleReveal(): void {[m
+[32m+[m[32m    const title = this.element.querySelector('.hero-section__title') as HTMLElement;[m
+[32m+[m[32m    if (!title) return;[m
+[32m+[m
+[32m+[m[32m    if (this.isInViewport(title, 0.1)) {[m
+[32m+[m[32m      title.classList.add('is-visible');[m
+[32m+[m[32m      return;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    this.observe('.hero-section__title', { threshold: 0.3 }, (el) => {[m
+[32m+[m[32m      (el as HTMLElement).classList.add('is-visible');[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private initDescriptionFade(): void {[m
+[32m+[m[32m    const desc = this.element.querySelector('.hero-section__description') as HTMLElement;[m
+[32m+[m[32m    if (!desc) return;[m
+[32m+[m
+[32m+[m[32m    if (this.isInViewport(desc, 0.1)) {[m
+[32m+[m[32m      desc.classList.add('is-visible');[m
+[32m+[m[32m      return;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    this.observe('.hero-section__description', { threshold: 0.3 }, (el) => {[m
+[32m+[m[32m      (el as HTMLElement).classList.add('is-visible');[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/hero/hero.css b/src/core/sections/hero/hero.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1bb3acd[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/hero/hero.css[m
+[36m@@ -0,0 +1,53 @@[m
+[32m+[m[32m.hero-section {[m
+[32m+[m[32m  position: relative;[m
+[32m+[m[32m  min-height: 100vh;[m
+[32m+[m[32m  min-height: 100dvh;[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  padding: var(--space-16) var(--space-8);[m
+[32m+[m[32m  background-color: var(--color-bg);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.hero-section__content {[m
+[32m+[m[32m  max-width: 800px;[m
+[32m+[m[32m  margin: 0 auto;[m
+[32m+[m[32m  text-align: center;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.hero-section__title {[m
+[32m+[m[32m  font-size: clamp(2.5rem, 8vw, 5rem);[m
+[32m+[m[32m  font-weight: var(--font-bold);[m
+[32m+[m[32m  line-height: 1.1;[m
+[32m+[m[32m  margin: 0 0 var(--space-6);[m
+[32m+[m[32m  color: var(--color-text);[m
+[32m+[m[32m  opacity: 0;[m
+[32m+[m[32m  transform: translateY(30px);[m
+[32m+[m[32m  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.hero-section__title.is-visible {[m
+[32m+[m[32m  opacity: 1;[m
+[32m+[m[32m  transform: translateY(0);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.hero-section__description {[m
+[32m+[m[32m  font-size: clamp(1.125rem, 2vw, 1.5rem);[m
+[32m+[m[32m  line-height: 1.6;[m
+[32m+[m[32m  margin: 0 0 var(--space-10);[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  opacity: 0;[m
+[32m+[m[32m  transform: translateY(20px);[m
+[32m+[m[32m  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 0.8s 0.2s;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.hero-section__description.is-visible {[m
+[32m+[m[32m  opacity: 0.9;[m
+[32m+[m[32m  transform: translateY(0);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.hero-section__buttons {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  gap: var(--space-4);[m
+[32m+[m[32m  flex-wrap: wrap;[m
+[32m+[m[32m  justify-content: center;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/navbar/NavbarSection.ts b/src/core/sections/navbar/NavbarSection.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6d73737[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/navbar/NavbarSection.ts[m
+[36m@@ -0,0 +1,32 @@[m
+[32m+[m[32mimport { BaseSection } from '../BaseSection.ts';[m
+[32m+[m
+[32m+[m[32mexport class NavbarSection extends BaseSection {[m
+[32m+[m[32m  init(): void {[m
+[32m+[m[32m    this.initMobileMenu();[m
+[32m+[m[32m    this.initThemeToggle();[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private initMobileMenu(): void {[m
+[32m+[m[32m    const toggleBtn = this.element.querySelector('.navbar__toggle');[m
+[32m+[m[32m    if (toggleBtn) {[m
+[32m+[m[32m      toggleBtn.addEventListener('click', () => {[m
+[32m+[m[32m        this.element.classList.toggle('navbar--menu-open');[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private initThemeToggle(): void {[m
+[32m+[m[32m    const themeBtn = this.element.querySelector('.theme-toggle');[m
+[32m+[m[32m    if (!themeBtn) return;[m
+[32m+[m
+[32m+[m[32m    const htmlEl = document.documentElement;[m
+[32m+[m
+[32m+[m[32m    themeBtn.addEventListener('click', () => {[m
+[32m+[m[32m      const isLight = htmlEl.dataset.theme === 'light';[m
+[32m+[m[32m      const newTheme = isLight ? 'dark' : 'light';[m
+[32m+[m[41m      [m
+[32m+[m[32m      htmlEl.dataset.theme = newTheme;[m
+[32m+[m[32m      localStorage.setItem('nativa-theme', newTheme);[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/stats/StatsSection.ts b/src/core/sections/stats/StatsSection.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..622381d[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/stats/StatsSection.ts[m
+[36m@@ -0,0 +1,44 @@[m
+[32m+[m[32mimport { BaseSection } from '../BaseSection.ts';[m
+[32m+[m
+[32m+[m[32mexport class StatsSection extends BaseSection {[m
+[32m+[m[32m  init(): void {[m
+[32m+[m[32m    this.animateCounters();[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private animateCounters(): void {[m
+[32m+[m[32m    const statValues = this.element.querySelectorAll('.stat-item__value');[m
+[32m+[m[41m    [m
+[32m+[m[32m    this.observeSelf({ threshold: 0.5 }, () => {[m
+[32m+[m[32m      statValues.forEach(el => {[m
+[32m+[m[32m        const target = el as HTMLElement;[m
+[32m+[m[32m        const text = target.textContent || '';[m
+[32m+[m[32m        const num = parseInt(text.replace(/[^0-9]/g, ''));[m
+[32m+[m[32m        if (isNaN(num)) return;[m
+[32m+[m[41m        [m
+[32m+[m[32m        let start = 0;[m
+[32m+[m[32m        const duration = 2000;[m
+[32m+[m[32m        const startTime = performance.now();[m
+[32m+[m[32m        const suffix = text.replace(/[0-9]/g, '');[m
+[32m+[m
+[32m+[m[32m        const update = (currentTime: number) => {[m
+[32m+[m[32m          const elapsed = currentTime - startTime;[m
+[32m+[m[32m          const progress = Math.min(elapsed / duration, 1);[m
+[32m+[m[41m          [m
+[32m+[m[32m          // easeOutQuart[m
+[32m+[m[32m          const easeOut = 1 - Math.pow(1 - progress, 4);[m
+[32m+[m[32m          const current = Math.floor(easeOut * num);[m
+[32m+[m[41m          [m
+[32m+[m[32m          target.textContent = current + suffix;[m
+[32m+[m
+[32m+[m[32m          if (progress < 1) {[m
+[32m+[m[32m            requestAnimationFrame(update);[m
+[32m+[m[32m          } else {[m
+[32m+[m[32m            target.textContent = text;[m
+[32m+[m[32m          }[m
+[32m+[m[32m        };[m
+[32m+[m
+[32m+[m[32m        requestAnimationFrame(update);[m
+[32m+[m[32m      });[m
+[32m+[m[32m    });[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/sections/stats/stats.css b/src/core/sections/stats/stats.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..09df0f9[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/sections/stats/stats.css[m
+[36m@@ -0,0 +1,33 @@[m
+[32m+[m[32m.stats-section {[m
+[32m+[m[32m  padding: var(--space-12) var(--space-8);[m
+[32m+[m[32m  background-color: var(--color-bg-alt);[m
+[32m+[m[32m  border-top: 1px solid var(--color-border);[m
+[32m+[m[32m  border-bottom: 1px solid var(--color-border);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.stats-grid {[m
+[32m+[m[32m  display: grid;[m
+[32m+[m[32m  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));[m
+[32m+[m[32m  gap: var(--space-8);[m
+[32m+[m[32m  text-align: center;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.stat-item {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  gap: var(--space-2);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.stat-item__value {[m
+[32m+[m[32m  font-size: var(--text-4xl);[m
+[32m+[m[32m  font-weight: var(--font-bold);[m
+[32m+[m[32m  color: var(--brand-gold);[m
+[32m+[m[32m  line-height: 1;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.stat-item__label {[m
+[32m+[m[32m  font-size: var(--text-sm);[m
+[32m+[m[32m  color: var(--color-text-muted);[m
+[32m+[m[32m  text-transform: uppercase;[m
+[32m+[m[32m  letter-spacing: 0.05em;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/core/tokens/unified.css b/src/core/tokens/unified.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6e3625e[m
+[1m--- /dev/null[m
+[1m+++ b/src/core/tokens/unified.css[m
+[36m@@ -0,0 +1,91 @@[m
+[32m+[m[32m:root {[m
+[32m+[m[32m  /* Brand Colors */[m
+[32m+[m[32m  --brand-gold: #d4af37;[m
+[32m+[m[32m  --brand-gold-light: #f4cf57;[m
+[32m+[m[32m  --brand-gold-dark: #b8941f;[m
+[32m+[m[41m  [m
+[32m+[m[32m  --brand-emerald: #10b981;[m
+[32m+[m[32m  --brand-ruby: #ef4444;[m
+[32m+[m[32m  --brand-sapphire: #0891b2;[m
+[32m+[m[32m  --brand-amethyst: #7c3aed;[m
+[32m+[m
+[32m+[m[32m  /* Theme Colors (Default Dark) */[m
+[32m+[m[32m  --color-bg: #0a0a0a;[m
+[32m+[m[32m  --color-bg-alt: #1a1a1a;[m
+[32m+[m[32m  --color-bg-hover: #252525;[m
+[32m+[m[32m  --color-border: #2d2d2d;[m
+[32m+[m[32m  --color-text: #ffffff;[m
+[32m+[m[32m  --color-text-muted: #a1a1aa;[m
+[32m+[m[32m  --color-text-inverse: #0a0a0a;[m
+[32m+[m
+[32m+[m[32m  /* Typography */[m
+[32m+[m[32m  --font-sans: 'Inter', system-ui, sans-serif;[m
+[32m+[m[32m  --font-serif: 'Playfair Display', Georgia, serif;[m
+[32m+[m[32m  --font-mono: 'JetBrains Mono', monospace;[m
+[32m+[m
+[32m+[m[32m  --text-xs: 0.75rem;    /* 12px */[m
+[32m+[m[32m  --text-sm: 0.875rem;   /* 14px */[m
+[32m+[m[32m  --text-base: 1rem;     /* 16px */[m
+[32m+[m[32m  --text-lg: 1.125rem;   /* 18px */[m
+[32m+[m[32m  --text-xl: 1.25rem;    /* 20px */[m
+[32m+[m[32m  --text-2xl: 1.5rem;    /* 24px */[m
+[32m+[m[32m  --text-3xl: 1.875rem;  /* 30px */[m
+[32m+[m[32m  --text-4xl: 2.25rem;   /* 36px */[m
+[32m+[m
+[32m+[m[32m  --font-normal: 400;[m
+[32m+[m[32m  --font-medium: 500;[m
+[32m+[m[32m  --font-semibold: 600;[m
+[32m+[m[32m  --font-bold: 700;[m
+[32m+[m
+[32m+[m[32m  /* Spacing */[m
+[32m+[m[32m  --space-0: 0;[m
+[32m+[m[32m  --space-1: 0.25rem;  /* 4px */[m
+[32m+[m[32m  --space-2: 0.5rem;   /* 8px */[m
+[32m+[m[32m  --space-3: 0.75rem;  /* 12px */[m
+[32m+[m[32m  --space-4: 1rem;     /* 16px */[m
+[32m+[m[32m  --space-5: 1.25rem;  /* 20px */[m
+[32m+[m[32m  --space-6: 1.5rem;   /* 24px */[m
+[32m+[m[32m  --space-8: 2rem;     /* 32px */[m
+[32m+[m[32m  --space-10: 2.5rem;  /* 40px */[m
+[32m+[m[32m  --space-12: 3rem;    /* 48px */[m
+[32m+[m[32m  --space-16: 4rem;    /* 64px */[m
+[32m+[m
+[32m+[m[32m  /* Border Radius */[m
+[32m+[m[32m  --radius-sm: 0.25rem;  /* 4px */[m
+[32m+[m[32m  --radius-md: 0.5rem;   /* 8px */[m
+[32m+[m[32m  --radius-lg: 0.75rem;  /* 12px */[m
+[32m+[m[32m  --radius-xl: 1rem;     /* 16px */[m
+[32m+[m[32m  --radius-2xl: 1.5rem;  /* 24px */[m
+[32m+[m[32m  --radius-full: 9999px;[m
+[32m+[m
+[32m+[m[32m  /* Shadows */[m
+[32m+[m[32m  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);[m
+[32m+[m[32m  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);[m
+[32m+[m[32m  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);[m
+[32m+[m[32m  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);[m
+[32m+[m[32m  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);[m
+[32m+[m[32m  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);[m
+[32m+[m
+[32m+[m[32m  /* Transitions */[m
+[32m+[m[32m  --transition-fast: 150ms ease;[m
+[32m+[m[32m  --transition-base: 250ms ease;[m
+[32m+[m[32m  --transition-slow: 400ms ease;[m
+[32m+[m[32m  --transition-transform: 300ms cubic-bezier(0.4, 0, 0.2, 1);[m
+[32m+[m
+[32m+[m[32m  /* Focus Ring */[m
+[32m+[m[32m  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--brand-gold);[m
+[32m+[m[32m  --focus-ring-inset: inset 0 0 0 2px var(--brand-gold);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m[data-theme="light"] {[m
+[32m+[m[32m  --color-bg: #ffffff;[m
+[32m+[m[32m  --color-bg-alt: #f8fafc;[m
+[32m+[m[32m  --color-bg-hover: #f1f5f9;[m
+[32m+[m[32m  --color-border: #e2e8f0;[m
+[32m+[m[32m  --color-text: #1e293b;[m
+[32m+[m[32m  --color-text-muted: #475569;[m
+[32m+[m[32m  --color-text-inverse: #ffffff;[m
+[32m+[m[32m  --brand-gold: #926f00;[m
+[32m+[m[32m  --brand-gold-dark: #7a5c00;[m
+[32m+[m[32m  --brand-gold-light: #af8600;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/css.ts b/src/css.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0059952[m
+[1m--- /dev/null[m
+[1m+++ b/src/css.ts[m
+[36m@@ -0,0 +1,17 @@[m
+[32m+[m[32m// Global Design Tokens[m
+[32m+[m[32mimport './core/tokens/unified.css';[m
+[32m+[m
+[32m+[m[32m// Core Components[m
+[32m+[m[32mimport './core/components/navbar.css';[m
+[32m+[m[32mimport './core/components/button.css';[m
+[32m+[m[32mimport './core/components/vanilla-card.css';[m
+[32m+[m[32mimport './core/components/card-grid.css';[m
+[32m+[m[32mimport './core/components/icon.css';[m
+[32m+[m[32mimport './core/components/icon-button.css';[m
+[32m+[m[32mimport './core/components/footer.css';[m
+[32m+[m
+[32m+[m[32m// Core Sections[m
+[32m+[m[32mimport './core/sections/hero/hero.css';[m
+[32m+[m[32mimport './core/sections/features/features.css';[m
+[32m+[m[32mimport './core/sections/stats/stats.css';[m
+[32m+[m[32mimport './core/sections/cta/cta.css';[m
+[1mdiff --git a/src/dev/theme-switcher.ts b/src/dev/theme-switcher.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..681c35b[m
+[1m--- /dev/null[m
+[1m+++ b/src/dev/theme-switcher.ts[m
+[36m@@ -0,0 +1,27 @@[m
+[32m+[m[32mimport neonCssUrl from '../../packages/theme-neon/src/assets/neon.css?url';[m
+[32m+[m
+[32m+[m[32mdocument.addEventListener('DOMContentLoaded', () => {[m
+[32m+[m[32m  const switcher = document.getElementById('dev-theme-switcher');[m
+[32m+[m[32m  if (!switcher) return;[m
+[32m+[m
+[32m+[m[32m  let isNeon = false;[m
+[32m+[m[32m  switcher.addEventListener('click', () => {[m
+[32m+[m[32m    isNeon = !isNeon;[m
+[32m+[m[32m    if (isNeon) {[m
+[32m+[m[32m      const neonLink = document.createElement('link');[m
+[32m+[m[32m      neonLink.rel = 'stylesheet';[m
+[32m+[m[32m      neonLink.href = neonCssUrl;[m
+[32m+[m[32m      neonLink.id = 'neon-theme-stylesheet';[m
+[32m+[m[32m      document.head.appendChild(neonLink);[m
+[32m+[m[32m      switcher.textContent = 'Default Mode';[m
+[32m+[m[32m      switcher.classList.remove('btn--outline');[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      const existing = document.getElementById('neon-theme-stylesheet');[m
+[32m+[m[32m      if (existing) {[m
+[32m+[m[32m        existing.remove();[m
+[32m+[m[32m      }[m
+[32m+[m[32m      switcher.textContent = 'Neon Mode';[m
+[32m+[m[32m      switcher.classList.add('btn--outline');[m
+[32m+[m[32m    }[m
+[32m+[m[32m  });[m
+[32m+[m[32m});[m
+[1mdiff --git a/src/frontend/home/home.css b/src/frontend/home/home.css[m
+[1mnew file mode 100644[m
+[1mindex 0000000..16a2b86[m
+[1m--- /dev/null[m
+[1m+++ b/src/frontend/home/home.css[m
+[36m@@ -0,0 +1,11 @@[m
+[32m+[m[32m/* Page-specific styles for the Home page */[m
+[32m+[m[32m.home-page {[m
+[32m+[m[32m  /* Uses design tokens from unified.css */[m
+[32m+[m[32m  background-color: var(--color-bg);[m
+[32m+[m[32m  min-height: 100vh;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.home-page__intro {[m
+[32m+[m[32m  padding: var(--space-8);[m
+[32m+[m[32m  text-align: center;[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/frontend/home/home.ts b/src/frontend/home/home.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0f8260d[m
+[1m--- /dev/null[m
+[1m+++ b/src/frontend/home/home.ts[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32mimport './home.css';[m
+[32m+[m
+[32m+[m[32mconsole.log('Home module initialized');[m
+[32m+[m
+[32m+[m[32m// Here you can initialize home-specific logic[m
+[32m+[m[32m// The global SectionLoader (in app.ts) handles data-section="hero" etc. automatically.[m
+[1mdiff --git a/src/init.ts b/src/init.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3d2964d[m
+[1m--- /dev/null[m
+[1m+++ b/src/init.ts[m
+[36m@@ -0,0 +1,12 @@[m
+[32m+[m[32m// init.ts - Runs before the body is parsed to prevent FOUC (Flash of Unstyled Content)[m
+[32m+[m
+[32m+[m[32mtry {[m
+[32m+[m[32m  const storedTheme = localStorage.getItem('nativa-theme');[m
+[32m+[m[32m  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;[m
+[32m+[m[41m  [m
+[32m+[m[32m  const themeToSet = storedTheme ? storedTheme : (systemPrefersDark ? 'dark' : 'light');[m
+[32m+[m[41m  [m
+[32m+[m[32m  document.documentElement.dataset.theme = themeToSet;[m
+[32m+[m[32m} catch (e) {[m
+[32m+[m[32m  console.warn('Could not initialize theme', e);[m
+[32m+[m[32m}[m
+[1mdiff --git a/tsconfig.json b/tsconfig.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..956ed04[m
+[1m--- /dev/null[m
+[1m+++ b/tsconfig.json[m
+[36m@@ -0,0 +1,30 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "compilerOptions": {[m
+[32m+[m[32m    "target": "ES2022",[m
+[32m+[m[32m    "module": "ESNext",[m
+[32m+[m[32m    "lib": ["ES2022"],[m
+[32m+[m[32m    "moduleResolution": "bundler",[m
+[32m+[m[32m    "types": ["node"],[m
+[32m+[m[32m    "strict": true,[m
+[32m+[m[32m    "esModuleInterop": true,[m
+[32m+[m[32m    "skipLibCheck": true,[m
+[32m+[m[32m    "forceConsistentCasingInFileNames": true,[m
+[32m+[m[32m    "resolveJsonModule": true,[m
+[32m+[m[32m    "isolatedModules": true,[m
+[32m+[m[32m    "declaration": true,[m
+[32m+[m[32m    "declarationMap": true,[m
+[32m+[m[32m    "sourceMap": true,[m
+[32m+[m[32m    "noUnusedLocals": false,[m
+[32m+[m[32m    "noUnusedParameters": false,[m
+[32m+[m[32m    "noImplicitReturns": true,[m
+[32m+[m[32m    "noFallthroughCasesInSwitch": true,[m
+[32m+[m[32m    "allowImportingTsExtensions": true,[m
+[32m+[m[32m    "noEmit": true,[m
+[32m+[m[32m    "ignoreDeprecations": "6.0",[m
+[32m+[m[32m    "paths": {[m
+[32m+[m[32m      "@nativa/theme-neon": ["./packages/theme-neon/src/index.ts"],[m
+[32m+[m[32m      "@nativa/theme-neon/*": ["./packages/theme-neon/src/*"][m
+[32m+[m[32m    }[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "exclude": ["node_modules", "dist"][m
+[32m+[m[32m}[m
+[1mdiff --git a/vite.config.ts b/vite.config.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6f85567[m
+[1m--- /dev/null[m
+[1m+++ b/vite.config.ts[m
+[36m@@ -0,0 +1,46 @@[m
+[32m+[m[32mimport { defineConfig } from 'vite';[m
+[32m+[m[32mimport { resolve } from 'path';[m
+[32m+[m[32mimport { readFileSync } from 'fs';[m
+[32m+[m
+[32m+[m[32mconst pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'));[m
+[32m+[m[32mconst version = pkg.version;[m
+[32m+[m
+[32m+[m[32mexport default defineConfig(({ mode }) => {[m
+[32m+[m[32m  const isProd = mode === 'production';[m
+[32m+[m[41m  [m
+[32m+[m[32m  return {[m
+[32m+[m[32m    base: './',[m
+[32m+[m[32m    server: {[m
+[32m+[m[32m      allowedHosts: true,[m
+[32m+[m[32m      port: 5173,[m
+[32m+[m[32m    },[m
+[32m+[m[32m    preview: {[m
+[32m+[m[32m      allowedHosts: true,[m
+[32m+[m[32m      port: 4173,[m
+[32m+[m[32m    },[m
+[32m+[m[32m    build: {[m
+[32m+[m[32m      outDir: 'dist',[m
+[32m+[m[32m      manifest: 'vanilla-cards-manifest.json',[m
+[32m+[m[32m      rollupOptions: {[m
+[32m+[m[32m        input: {[m
+[32m+[m[32m          main: resolve(__dirname, 'index.html'),[m
+[32m+[m[32m          init: resolve(__dirname, 'src/init.ts'),[m
+[32m+[m[32m          app: resolve(__dirname, 'src/app.ts'),[m
+[32m+[m[32m          home: resolve(__dirname, 'src/frontend/home/home.ts'),[m
+[32m+[m[32m          'theme-switcher': resolve(__dirname, 'src/dev/theme-switcher.ts')[m
+[32m+[m[32m        },[m
+[32m+[m[32m        output: {[m
+[32m+[m[32m          entryFileNames: `[name].${version}.js`,[m
+[32m+[m[32m          chunkFileNames: `[name].${version}.js`,[m
+[32m+[m[32m          assetFileNames: (assetInfo) => {[m
+[32m+[m[32m            const name = assetInfo.name || '';[m
+[32m+[m[32m            if (name.endsWith('.css')) {[m
+[32m+[m[32m              return `[name].${version}.css`;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            return `assets/[name].${version}[extname]`;[m
+[32m+[m[32m          }[m
+[32m+[m[32m        }[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m[32m});[m
