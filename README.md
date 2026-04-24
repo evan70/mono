@@ -113,3 +113,12 @@ $aboutJs = AssetHelper::js('about', 'vanilla-cards');
 ```
 
 Enjoy building fast, reliable interfaces!
+
+---
+
+## Development Rules & CI/CD
+
+- **Rules:** For detailed project rules, see [RULES.md](./RULES.md) or [.cursorrules](./.cursorrules).
+- **Package Manager:** This project uses `pnpm`.
+- **CI/CD:** GitHub Actions automatically builds the project and deploys it to GitHub Pages upon pushing to the `main` branch.
+
