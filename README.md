@@ -131,8 +131,10 @@ Enjoy building fast, reliable interfaces!
 **Solution:** The theme initialization logic was moved from an external module (`src/init.ts`) to an inline synchronous script in the `<head>` of `index.html`. This ensures the `data-theme` attribute is applied to the `<html>` element before the browser starts rendering the page body.
 
 ### GitHub Pages Deployment (MIME Type Errors)
-**Problem:** Assets were failing to load on GitHub Pages with "MIME type" errors, and some files were ignored.
+**Problem:** Assets were failing to load on GitHub Pages with "MIME type" errors (e.g., `.ts` files served as `video/mp2t`), and CSS was missing from the head when viewing the source.
 **Solution:** 
+- Added explicit `<link rel="stylesheet">` tags to the `<head>` of `index.html` for all core and section styles. This ensures CSS is discovered and bundled correctly by Vite and remains visible in the document head.
+- Moved all entry point `<script>` tags to the `<head>` with `type="module"`.
 - Added a `.nojekyll` file to the `public/` directory to disable Jekyll processing on GitHub Pages.
 - Ensured all script tags in `index.html` use relative paths (e.g., `./src/app.ts`) so Vite's bundler correctly identifies and processes them during the build.
 - Configured `base: './'` in `vite.config.ts` to ensure compatibility with subpath deployments.
