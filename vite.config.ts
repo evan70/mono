@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
       port: 4173,
     },
     build: {
-      outDir: 'public',
+      outDir: 'docs',
       emptyOutDir: true,
       manifest: 'vanilla-cards-manifest.json',
       rollupOptions: {
