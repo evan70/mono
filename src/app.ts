@@ -1,46 +1,12 @@
 import './css.ts';
 import { SectionLoader } from './core/sections/SectionLoader.ts';
 import { NotificationManager } from './core/components/NotificationManager.ts';
+import { CookieConsent } from './core/components/CookieConsent.ts';
 
 // Expose to window for legacy support and easy access
 (window as any).NotificationManager = NotificationManager;
 
 document.addEventListener('DOMContentLoaded', () => {
   SectionLoader.loadSections();
-  checkCookieConsent();
+  CookieConsent.init();
 });
-
-function checkCookieConsent(): void {
-  try {
-    const consent = localStorage.getItem('nativa-cookie-consent');
-    if (!consent) {
-      NotificationManager.show({
-        title: 'Cookie Consent',
-        message: 'We use cookies to improve your experience on our site.',
-        type: 'info',
-        duration: 0,
-        position: 'bottom-right',
-        actions: [
-          {
-            label: 'Accept',
-            primary: true,
-            callback: () => {
-              try {
-                localStorage.setItem('nativa-cookie-consent', 'true');
-              } catch (e) {
-                console.error('Failed to set cookie consent in localStorage', e);
-              }
-            }
-          },
-          {
-            label: 'Learn More',
-            href: '/privacy-policy',
-            primary: false
-          }
-        ]
-      });
-    }
-  } catch (e) {
-    console.error('Failed to check cookie consent in localStorage', e);
-  }
-}
