@@ -19,6 +19,7 @@ function checkCookieConsent(): void {
         message: 'We use cookies to improve your experience on our site.',
         type: 'info',
         duration: 0,
+        position: 'bottom-right',
         actions: [
           {
             label: 'Accept',
@@ -30,6 +31,11 @@ function checkCookieConsent(): void {
                 console.error('Failed to set cookie consent in localStorage', e);
               }
             }
+          },
+          {
+            label: 'Learn More',
+            href: '/privacy-policy',
+            primary: false
           }
         ]
       });
