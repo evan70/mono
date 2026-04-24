@@ -1,10 +1,17 @@
 export type NotificationType = 'success' | 'error' | 'warning' | 'info';
 
+export interface NotificationAction {
+  label: string;
+  callback: () => void;
+  primary?: boolean;
+}
+
 interface NotificationOptions {
   title?: string;
   message: string;
   type?: NotificationType;
   duration?: number;
+  actions?: NotificationAction[];
 }
 
 export class NotificationManager {
@@ -20,7 +27,7 @@ export class NotificationManager {
   }
 
   static show(options: NotificationOptions): void {
-    const { title, message, type = 'info', duration = 5000 } = options;
+    const { title, message, type = 'info', duration = 5000, actions } = options;
     const container = this.getContainer();
 
     const notification = document.createElement('div');
@@ -45,6 +52,24 @@ export class NotificationManager {
         </svg>
       </button>
     `;
+
+    if (actions && actions.length > 0) {
+      const actionsContainer = document.createElement('div');
+      actionsContainer.className = 'notification__actions';
+      
+      actions.forEach(action => {
+        const btn = document.createElement('button');
+        btn.className = `btn btn--sm ${action.primary ? '' : 'btn--secondary'}`;
+        btn.textContent = action.label;
+        btn.addEventListener('click', () => {
+          action.callback();
+          this.hide(notification);
+        });
+        actionsContainer.appendChild(btn);
+      });
+      
+      notification.querySelector('.notification__content')?.appendChild(actionsContainer);
+    }
 
     container.appendChild(notification);
 
