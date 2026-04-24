@@ -1,6 +1,6 @@
 {
   "name": "@nativa/theme-neon",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Neon theme for Vanilla Cards",
   "main": "src/index.ts",
   "exports": {

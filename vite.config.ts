@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import neonTheme from '@nativa/theme-neon';
+import { readFileSync } from 'fs';
+
+const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'));
+const version = pkg.version;
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
@@ -19,19 +22,21 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       manifest: 'vanilla-cards-manifest.json',
       rollupOptions: {
-        input: [
-          resolve(__dirname, 'index.html'),
-          resolve(__dirname, 'src/init.ts'),
-          resolve(__dirname, 'src/app.ts'),
-          resolve(__dirname, 'src/dev/theme-switcher.ts')
-        ],
+        input: {
+          main: resolve(__dirname, 'index.html'),
+          init: resolve(__dirname, 'src/init.ts'),
+          app: resolve(__dirname, 'src/app.ts'),
+          'theme-switcher': resolve(__dirname, 'src/dev/theme-switcher.ts')
+        },
         output: {
-          entryFileNames: '[name].[hash].js',
+          entryFileNames: `[name].${version}.js`,
+          chunkFileNames: `[name].${version}.js`,
           assetFileNames: (assetInfo) => {
-            if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-              return isProd ? '[name].[hash].css' : '[name].css';
+            const name = assetInfo.name || '';
+            if (name.endsWith('.css')) {
+              return `[name].${version}.css`;
             }
-            return 'assets/[name].[hash][extname]';
+            return `assets/[name].${version}[extname]`;
           }
         }
       }
