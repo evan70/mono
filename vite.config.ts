@@ -1,23 +1,10 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import { readFileSync } from 'fs';
 
 export default defineConfig(({ mode }) => {
   return {
     base: './',
-    plugins: [
-      {
-        name: 'html-transform',
-        configureServer(server) {
-          server.middlewares.use((req, res, next) => {
-            if (req.url === '/' || req.url === '/index.html') {
-              req.url = '/vite-entry.html';
-            }
-            next();
-          });
-        },
-      },
-    ],
+    publicDir: 'static',
     server: {
       allowedHosts: true,
       port: 5173,
@@ -27,12 +14,12 @@ export default defineConfig(({ mode }) => {
       port: 4173,
     },
     build: {
-      outDir: 'dist',
+      outDir: 'public',
       emptyOutDir: true,
       manifest: 'vanilla-cards-manifest.json',
       rollupOptions: {
         input: {
-          index: resolve(__dirname, 'vite-entry.html'),
+          index: resolve(__dirname, 'index.html'),
           init: resolve(__dirname, 'src/init.ts'),
           'core-app': resolve(__dirname, 'src/app.ts'),
           'core-css': resolve(__dirname, 'src/css.ts'),

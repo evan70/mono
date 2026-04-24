@@ -1,8 +1,11 @@
 export type NotificationType = 'success' | 'error' | 'warning' | 'info';
+export type NotificationPosition = 'top-right' | 'bottom-right';
 
 export interface NotificationAction {
   label: string;
-  callback: () => void;
+  callback?: () => void;
+  href?: string;
+  target?: string;
   primary?: boolean;
 }
 
@@ -12,23 +15,28 @@ interface NotificationOptions {
   type?: NotificationType;
   duration?: number;
   actions?: NotificationAction[];
+  position?: NotificationPosition;
 }
 
 export class NotificationManager {
-  private static container: HTMLElement | null = null;
+  private static containers: Map<NotificationPosition, HTMLElement> = new Map();
 
-  private static getContainer(): HTMLElement {
-    if (!this.container) {
-      this.container = document.createElement('div');
-      this.container.className = 'notification-container';
-      document.body.appendChild(this.container);
+  private static getContainer(position: NotificationPosition = 'top-right'): HTMLElement {
+    let container = this.containers.get(position);
+    
+    if (!container) {
+      container = document.createElement('div');
+      container.className = `notification-container notification-container--${position}`;
+      document.body.appendChild(container);
+      this.containers.set(position, container);
     }
-    return this.container;
+    
+    return container;
   }
 
   static show(options: NotificationOptions): void {
-    const { title, message, type = 'info', duration = 5000, actions } = options;
-    const container = this.getContainer();
+    const { title, message, type = 'info', duration = 5000, actions, position = 'top-right' } = options;
+    const container = this.getContainer(position);
 
     const notification = document.createElement('div');
     notification.className = `notification notification--${type}`;
@@ -58,14 +66,28 @@ export class NotificationManager {
       actionsContainer.className = 'notification__actions';
       
       actions.forEach(action => {
-        const btn = document.createElement('button');
-        btn.className = `btn btn--sm ${action.primary ? '' : 'btn--secondary'}`;
-        btn.textContent = action.label;
-        btn.addEventListener('click', () => {
-          action.callback();
-          this.hide(notification);
+        const isLink = !!action.href;
+        const element = document.createElement(isLink ? 'a' : 'button');
+        element.className = `btn btn--sm ${action.primary ? '' : 'btn--secondary'}`;
+        element.textContent = action.label;
+        
+        if (isLink) {
+          (element as HTMLAnchorElement).href = action.href!;
+          if (action.target) {
+            (element as HTMLAnchorElement).target = action.target;
+          }
+        }
+        
+        element.addEventListener('click', (e) => {
+          if (action.callback) {
+            action.callback();
+          }
+          if (!isLink) {
+            this.hide(notification, position);
+          }
         });
-        actionsContainer.appendChild(btn);
+        
+        actionsContainer.appendChild(element);
       });
       
       notification.querySelector('.notification__content')?.appendChild(actionsContainer);
@@ -78,22 +100,23 @@ export class NotificationManager {
     notification.classList.add('notification--visible');
 
     const closeBtn = notification.querySelector('.notification__close');
-    closeBtn?.addEventListener('click', () => this.hide(notification));
+    closeBtn?.addEventListener('click', () => this.hide(notification, position));
 
     if (duration > 0) {
       setTimeout(() => {
-        this.hide(notification);
+        this.hide(notification, position);
       }, duration);
     }
   }
 
-  private static hide(notification: HTMLElement): void {
+  private static hide(notification: HTMLElement, position: NotificationPosition): void {
     notification.classList.remove('notification--visible');
     notification.addEventListener('transitionend', () => {
       notification.remove();
-      if (this.container && this.container.childElementCount === 0) {
-        this.container.remove();
-        this.container = null;
+      const container = this.containers.get(position);
+      if (container && container.childElementCount === 0) {
+        container.remove();
+        this.containers.delete(position);
       }
     }, { once: true });
   }
