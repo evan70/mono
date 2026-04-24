@@ -1,9 +1,9 @@
-import { BaseSection } from './BaseSection';
-import { HeroSection } from './hero/HeroSection';
-import { FeaturesSection } from './features/FeaturesSection';
-import { CTASection } from './cta/CTASection';
-import { StatsSection } from './stats/StatsSection';
-import { NavbarSection } from './navbar/NavbarSection';
+import { BaseSection } from './BaseSection.ts';
+import { HeroSection } from './hero/HeroSection.ts';
+import { FeaturesSection } from './features/FeaturesSection.ts';
+import { CTASection } from './cta/CTASection.ts';
+import { StatsSection } from './stats/StatsSection.ts';
+import { NavbarSection } from './navbar/NavbarSection.ts';
 
 const sectionMap: Record<string, new (el: HTMLElement) => BaseSection> = {
   hero: HeroSection,

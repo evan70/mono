@@ -1,5 +1,5 @@
 import './features.css';
-import { BaseSection } from '../BaseSection';
+import { BaseSection } from '../BaseSection.ts';
 
 export class FeaturesSection extends BaseSection {
   init(): void {
