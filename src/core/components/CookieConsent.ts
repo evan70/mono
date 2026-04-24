@@ -23,7 +23,7 @@ export class CookieConsent {
       position: 'bottom-right',
       actions: [
         {
-          label: 'Accept All',
+          label: 'Accept',
           primary: true,
           callback: () => {
             this.setConsent(true);
