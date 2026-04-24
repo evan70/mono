@@ -24,10 +24,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
-          'core-init': resolve(__dirname, 'src/init.ts'),
-          'core-app': resolve(__dirname, 'src/app.ts'),
-          'core-css': resolve(__dirname, 'src/css.ts'),
-          'home': resolve(__dirname, 'src/frontend/home/home.ts'),
+          init: resolve(__dirname, 'src/init.ts'),
+          app: resolve(__dirname, 'src/app.ts'),
+          home: resolve(__dirname, 'src/frontend/home/home.ts'),
           'theme-switcher': resolve(__dirname, 'src/dev/theme-switcher.ts')
         },
         output: {
