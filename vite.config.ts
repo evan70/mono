@@ -23,8 +23,6 @@ export default defineConfig(({ mode }) => {
           'index': resolve(__dirname, 'index.html'),
           'core-init': resolve(__dirname, 'src/init.ts'),
           'core-app': resolve(__dirname, 'src/app.ts'),
-          'core-css': resolve(__dirname, 'src/css.ts'),
-          'home': resolve(__dirname, 'src/frontend/home/home.ts'),
           'neon-theme': resolve(__dirname, 'src/dev/theme-switcher.ts')
         },
         output: {
