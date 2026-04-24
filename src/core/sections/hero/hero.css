@@ -26,7 +26,6 @@
   font-size: clamp(1.125rem, 2vw, 1.5rem);
   line-height: 1.6;
   margin: 0 0 var(--space-10);
-  opacity: 0.9;
   color: var(--color-text-muted);
 }
 
