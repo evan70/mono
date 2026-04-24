@@ -19,7 +19,6 @@ node_modules/
 # Build artifacts
 dist/
 public/
-v0.0.1/
 build/
 target/
 .gradle/

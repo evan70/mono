@@ -7,6 +7,7 @@ export interface NotificationAction {
   href?: string;
   target?: string;
   primary?: boolean;
+  close?: boolean;
 }
 
 interface NotificationOptions {
@@ -82,7 +83,9 @@ export class NotificationManager {
           if (action.callback) {
             action.callback();
           }
-          if (!isLink) {
+          
+          const shouldClose = action.close ?? !isLink;
+          if (shouldClose) {
             this.hide(notification, position);
           }
         });
