@@ -1,4 +1,3 @@
-import './features.css';
 import { BaseSection } from '../BaseSection.ts';
 
 export class FeaturesSection extends BaseSection {
