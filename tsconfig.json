@@ -22,7 +22,8 @@
     "noEmit": true,
     "ignoreDeprecations": "6.0",
     "paths": {
-      "@nativa/theme-neon": ["./packages/theme-neon/src/index.ts"]
+      "@nativa/theme-neon": ["./packages/theme-neon/src/index.ts"],
+      "@nativa/theme-neon/*": ["./packages/theme-neon/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
