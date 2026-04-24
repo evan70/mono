@@ -122,3 +122,18 @@ Enjoy building fast, reliable interfaces!
 - **Package Manager:** This project uses `pnpm`.
 - **CI/CD:** GitHub Actions automatically builds the project and deploys it to GitHub Pages upon pushing to the `main` branch.
 
+---
+
+## Known Issues & Solutions
+
+### FOUC (Flash of Unstyled Content)
+**Problem:** A flash of unstyled or incorrectly themed content occurred during page load because the theme initialization script was being loaded as an asynchronous module.
+**Solution:** The theme initialization logic was moved from an external module (`src/init.ts`) to an inline synchronous script in the `<head>` of `index.html`. This ensures the `data-theme` attribute is applied to the `<html>` element before the browser starts rendering the page body.
+
+### GitHub Pages Deployment (MIME Type Errors)
+**Problem:** Assets were failing to load on GitHub Pages with "MIME type" errors, and some files were ignored.
+**Solution:** 
+- Added a `.nojekyll` file to the `public/` directory to disable Jekyll processing on GitHub Pages.
+- Ensured all script tags in `index.html` use relative paths (e.g., `./src/app.ts`) so Vite's bundler correctly identifies and processes them during the build.
+- Configured `base: './'` in `vite.config.ts` to ensure compatibility with subpath deployments.
+
