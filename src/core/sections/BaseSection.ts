@@ -3,15 +3,6 @@ export abstract class BaseSection {
 
   abstract init(): void;
 
-  protected isInViewport(el: Element, threshold = 0): boolean {
-    const rect = el.getBoundingClientRect();
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    return (
-      rect.top >= -threshold * windowHeight &&
-      rect.bottom <= windowHeight * (1 + threshold)
-    );
-  }
-
   protected observe(
     selector: string,
     options: IntersectionObserverInit,
@@ -31,11 +22,7 @@ export abstract class BaseSection {
     }, options);
 
     elements.forEach(el => {
-      if (immediate && this.isInViewport(el, (options.threshold as number) || 0)) {
-        callback(el, null as any);
-      } else {
-        observer.observe(el);
-      }
+      observer.observe(el);
     });
   }
 
