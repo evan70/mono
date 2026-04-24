@@ -8,6 +8,7 @@ import './core/components/vanilla-card.css';
 import './core/components/card-grid.css';
 import './core/components/icon.css';
 import './core/components/icon-button.css';
+import './core/components/notification.css';
 import './core/components/footer.css';
 
 // Core Sections
