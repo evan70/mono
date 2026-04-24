@@ -24,9 +24,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
-          init: resolve(__dirname, 'src/init.ts'),
-          app: resolve(__dirname, 'src/app.ts'),
-          'theme-switcher': resolve(__dirname, 'src/dev/theme-switcher.ts')
+          init: resolve(__dirname, 'src/init.js'),
+          app: resolve(__dirname, 'src/app.js'),
+          'theme-switcher': resolve(__dirname, 'src/dev/theme-switcher.js')
         },
         output: {
           entryFileNames: `[name].${version}.js`,
