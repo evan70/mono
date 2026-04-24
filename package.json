@@ -4,7 +4,7 @@
   "description": "Vanilla JS and CSS cards architecture for Nativa CMS",
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=20"
   },
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^5.2.0"
+    "vite": "^5.4.21"
   }
 }

@@ -19,12 +19,12 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       manifest: 'vanilla-cards-manifest.json',
       rollupOptions: {
-        input: {
-          'index': resolve(__dirname, 'index.html'),
-          'core-init': resolve(__dirname, 'src/init.ts'),
-          'core-app': resolve(__dirname, 'src/app.ts'),
-          'neon-theme': resolve(__dirname, 'src/dev/theme-switcher.ts')
-        },
+        input: [
+          resolve(__dirname, 'index.html'),
+          resolve(__dirname, 'src/init.ts'),
+          resolve(__dirname, 'src/app.ts'),
+          resolve(__dirname, 'src/dev/theme-switcher.ts')
+        ],
         output: {
           entryFileNames: '[name].[hash].js',
           assetFileNames: (assetInfo) => {
