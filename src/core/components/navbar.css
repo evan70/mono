@@ -84,3 +84,23 @@
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
 }
+
+/* Fallbacks for Flexbox Gap (Chrome < 84 / Android 9) */
+@supports not (gap: 1px) {
+  .navbar__brand svg {
+    margin-right: var(--space-2);
+  }
+
+  .navbar__menu > * + * {
+    margin-left: var(--space-6);
+  }
+
+  .navbar--menu-open .navbar__menu > * + * {
+    margin-left: 0;
+    margin-top: var(--space-6);
+  }
+
+  .navbar__actions > * + * {
+    margin-left: var(--space-3);
+  }
+}
