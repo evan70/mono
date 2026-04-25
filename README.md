@@ -139,3 +139,9 @@ Enjoy building fast, reliable interfaces!
 - Ensured all script tags in `index.html` use relative paths (e.g., `./src/app.ts`) so Vite's bundler correctly identifies and processes them during the build.
 - Configured `base: './'` in `vite.config.ts` to ensure compatibility with subpath deployments.
 
+### Android 9 / Chrome 70 Compatibility
+**Problem:** Users on older browsers, particularly Chrome 70 (common on Android 9), experienced non-functional navigation buttons and layout issues where elements appeared "squashed" or lacked proper spacing.
+**Solution:**
+- **JS Transpilation (The Key Fix):** The codebase uses modern ES features like optional chaining (`?.`) and nullish coalescing (`??`). Chrome 70 does not support these, causing the entire JavaScript bundle to fail with a syntax error. By lowering the build target to `['chrome70', 'es2015']` in `vite.config.ts`, we ensure all modern syntax is transpiled into a format compatible with these older engines, restoring the mobile menu toggle and other interactive functionality.
+- **CSS Gap Fallbacks:** Chrome versions older than 84 do not support the Flexbox `gap` property. We added `@supports not (gap: 1px)` fallbacks in `navbar.css` using margin-based spacing to ensure the layout remains intact on these older devices.
+
