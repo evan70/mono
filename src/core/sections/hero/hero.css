@@ -4,8 +4,14 @@
   min-height: 100dvh;
   display: flex;
   align-items: center;
-  padding: var(--space-16) var(--space-8);
+  padding: var(--space-16) var(--space-2);
   background-color: var(--color-bg);
+}
+
+@media (min-width: 769px) {
+  .hero-section {
+    padding: var(--space-16) var(--space-8);
+  }
 }
 
 .hero-section--fw {
