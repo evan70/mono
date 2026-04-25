@@ -13,15 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
       neonLink.href = neonCssUrl;
       neonLink.id = 'neon-theme-stylesheet';
       document.head.appendChild(neonLink);
-      switcher.textContent = 'Default Mode';
-      switcher.classList.remove('btn--outline');
+      switcher.classList.add('navbar__dev-toggle--active');
     } else {
       const existing = document.getElementById('neon-theme-stylesheet');
       if (existing) {
         existing.remove();
       }
-      switcher.textContent = 'Neon Mode';
-      switcher.classList.add('btn--outline');
+      switcher.classList.remove('navbar__dev-toggle--active');
     }
   });
 });
