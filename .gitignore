@@ -17,6 +17,7 @@ __pycache__/
 node_modules/
 
 # Build artifacts
+docs/
 dist/
 build/
 target/
