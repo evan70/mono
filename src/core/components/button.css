@@ -16,6 +16,12 @@
   text-decoration: none;
 }
 
+@supports not (gap: 1px) {
+  .btn > * + * {
+    margin-left: var(--space-2);
+  }
+}
+
 .btn:hover:not(:disabled) {
   background-color: var(--brand-gold-dark);
 }

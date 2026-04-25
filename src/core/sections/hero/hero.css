@@ -62,3 +62,9 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+@supports not (gap: 1px) {
+  .hero-section__buttons > * + * {
+    margin-left: var(--space-4);
+  }
+}

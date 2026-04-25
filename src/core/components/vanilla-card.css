@@ -43,6 +43,12 @@
   gap: var(--space-3);
 }
 
+@supports not (gap: 1px) {
+  .card__footer > * + * {
+    margin-left: var(--space-3);
+  }
+}
+
 .card__image {
   width: 100%;
   height: auto;

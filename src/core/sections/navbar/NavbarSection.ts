@@ -16,7 +16,7 @@ export class NavbarSection extends BaseSection {
   }
 
   private initThemeToggle(): void {
-    const themeBtn = this.element.querySelector('.theme-toggle');
+    const themeBtn = this.element.querySelector('.navbar__theme-toggle');
     if (!themeBtn) return;
 
     const htmlEl = document.documentElement;

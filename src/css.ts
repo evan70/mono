@@ -1,5 +1,6 @@
 // Global Design Tokens
 import './core/tokens/unified.css';
+import './core/global/utilities.css';
 
 // Core Components
 import './core/components/navbar.css';
