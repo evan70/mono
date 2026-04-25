@@ -1,13 +1,7 @@
 .cta-section {
-  padding: var(--space-16) var(--space-2);
+  padding: var(--space-16) 0;
   background-color: var(--color-bg);
   text-align: center;
-}
-
-@media (min-width: 769px) {
-  .cta-section {
-    padding: var(--space-16) var(--space-8);
-  }
 }
 
 .cta-section__content {
@@ -37,4 +31,10 @@
   gap: var(--space-4);
   justify-content: center;
   flex-wrap: wrap;
+}
+
+@supports not (gap: 1px) {
+  .cta-section__actions > * + * {
+    margin-left: var(--space-4);
+  }
 }

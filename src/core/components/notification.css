@@ -9,6 +9,12 @@
   width: 400px;
 }
 
+@supports not (gap: 1px) {
+  .notification-container > * + * {
+    margin-top: var(--space-3);
+  }
+}
+
 .notification-container--top-right {
   top: var(--space-4);
   right: var(--space-4);
@@ -33,6 +39,12 @@
   transition: transform var(--transition-base), opacity var(--transition-base);
   transform: translateX(120%);
   opacity: 0;
+}
+
+@supports not (gap: 1px) {
+  .notification > * + * {
+    margin-left: var(--space-3);
+  }
 }
 
 .notification--visible {
@@ -95,4 +107,10 @@
   display: flex;
   gap: var(--space-2);
   margin-top: var(--space-3);
+}
+
+@supports not (gap: 1px) {
+  .notification__actions > * + * {
+    margin-left: var(--space-2);
+  }
 }

@@ -85,9 +85,13 @@
   box-shadow: var(--shadow-md);
 }
 
+.navbar__logo {
+  flex-shrink: 0;
+}
+
 /* Fallbacks for Flexbox Gap (Chrome < 84 / Android 9) */
 @supports not (gap: 1px) {
-  .navbar__brand svg {
+  .navbar__logo {
     margin-right: var(--space-2);
   }
 

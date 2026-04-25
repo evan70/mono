@@ -1,12 +1,6 @@
 .features-section {
-  padding: var(--space-16) var(--space-2);
+  padding: var(--space-16) 0;
   background-color: var(--color-bg-alt);
-}
-
-@media (min-width: 769px) {
-  .features-section {
-    padding: var(--space-16) var(--space-8);
-  }
 }
 
 .features-section__header {
@@ -30,9 +24,4 @@
 .features-section .card__icon {
   margin-bottom: var(--space-4);
   color: var(--brand-gold);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
 }
