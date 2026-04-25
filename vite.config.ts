@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
       port: 4173,
     },
     build: {
+      target: ['chrome70', 'es2015'],
       outDir: 'docs',
       emptyOutDir: true,
       manifest: 'vanilla-cards-manifest.json',

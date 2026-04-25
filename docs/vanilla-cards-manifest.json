@@ -9,10 +9,10 @@
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "src/dev/theme-switcher.ts",
-      "src/dev/theme-switcher.ts",
       "src/app.ts",
       "src/app.ts",
+      "src/dev/theme-switcher.ts",
+      "src/dev/theme-switcher.ts",
       "src/css.ts",
       "src/frontend/home/home.ts",
       "src/frontend/home/home.ts"
