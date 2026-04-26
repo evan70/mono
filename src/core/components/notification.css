@@ -10,6 +10,9 @@
 }
 
 @supports not (gap: 1px) {
+  .notification-container {
+    gap: 0;
+  }
   .notification-container > * + * {
     margin-top: var(--space-3);
   }
@@ -42,6 +45,9 @@
 }
 
 @supports not (gap: 1px) {
+  .notification {
+    gap: 0;
+  }
   .notification > * + * {
     margin-left: var(--space-3);
   }
@@ -110,6 +116,9 @@
 }
 
 @supports not (gap: 1px) {
+  .notification__actions {
+    gap: 0;
+  }
   .notification__actions > * + * {
     margin-left: var(--space-2);
   }

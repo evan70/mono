@@ -44,6 +44,9 @@
 }
 
 @supports not (gap: 1px) {
+  .card__footer {
+    gap: 0;
+  }
   .card__footer > * + * {
     margin-left: var(--space-3);
   }

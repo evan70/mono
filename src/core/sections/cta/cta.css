@@ -34,7 +34,11 @@
 }
 
 @supports not (gap: 1px) {
-  .cta-section__actions > * + * {
-    margin-left: var(--space-4);
+  .cta-section__actions {
+    gap: 0;
+    margin: calc(var(--space-2) * -1);
+  }
+  .cta-section__actions > * {
+    margin: var(--space-2);
   }
 }

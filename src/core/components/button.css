@@ -17,6 +17,9 @@
 }
 
 @supports not (gap: 1px) {
+  .btn {
+    gap: 0;
+  }
   .btn > * + * {
     margin-left: var(--space-2);
   }
