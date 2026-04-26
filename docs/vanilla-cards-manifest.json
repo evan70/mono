@@ -1,4 +1,8 @@
 {
+  "/home/engine/project/packages/theme-fire-show/src/assets/fire-show.css": {
+    "file": "fire-show.css",
+    "src": "/home/engine/project/packages/theme-fire-show/src/assets/fire-show.css"
+  },
   "/home/engine/project/packages/theme-neon/src/assets/neon.css": {
     "file": "neon.css",
     "src": "/home/engine/project/packages/theme-neon/src/assets/neon.css"
@@ -64,7 +68,8 @@
     "src": "src/dev/theme-switcher.ts",
     "isEntry": true,
     "assets": [
-      "neon.css"
+      "neon.css",
+      "fire-show.css"
     ]
   },
   "src/frontend/home/home.ts": {
