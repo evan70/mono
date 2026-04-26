@@ -56,6 +56,10 @@
   gap: var(--space-3);
 }
 
+.navbar__dev-toggle {
+  color: var(--color-text-muted);
+}
+
 .navbar__dev-toggle--active {
   color: var(--brand-gold) !important;
   background-color: var(--color-bg-hover);
@@ -64,6 +68,11 @@
 
 .navbar__toggle {
   display: flex;
+}
+
+.navbar__toggle-icon--meatball,
+.navbar__toggle-icon--close {
+  transition: opacity var(--transition-fast);
 }
 
 @media (min-width: 768px) {
@@ -137,6 +146,9 @@
     margin-left: var(--space-6);
   }
 
+  .navbar--menu-open .navbar__menu {
+    gap: 0;
+  }
   .navbar--menu-open .navbar__menu > * + * {
     margin-left: 0;
     margin-top: var(--space-4);

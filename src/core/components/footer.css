@@ -7,7 +7,7 @@
 .footer__container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-2);
+  padding: 0 var(--space-4);
 }
 
 @media (min-width: 769px) {
@@ -21,6 +21,18 @@
   grid-template-columns: 1fr;
   gap: var(--space-8);
   margin-bottom: var(--space-12);
+}
+
+@supports not (gap: 1px) {
+  .footer__grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: calc(var(--space-4) * -1);
+  }
+  .footer__grid > * {
+    margin: var(--space-4);
+    flex: 1 1 250px;
+  }
 }
 @media (min-width: 768px) {
   .footer__grid {
@@ -59,6 +71,9 @@
 }
 
 @supports not (gap: 1px) {
+  .footer__list {
+    gap: 0;
+  }
   .footer__list > * + * {
     margin-top: var(--space-3);
   }
@@ -84,6 +99,9 @@
 }
 
 @supports not (gap: 1px) {
+  .footer__bottom {
+    gap: 0;
+  }
   .footer__bottom > * + * {
     margin-top: var(--space-4);
   }
@@ -96,6 +114,9 @@
     text-align: left;
   }
   @supports not (gap: 1px) {
+    .footer__bottom {
+      gap: 0;
+    }
     .footer__bottom > * + * {
       margin-top: 0;
       margin-left: var(--space-4);
@@ -115,6 +136,9 @@
 }
 
 @supports not (gap: 1px) {
+  .footer__socials {
+    gap: 0;
+  }
   .footer__socials > * + * {
     margin-left: var(--space-4);
   }

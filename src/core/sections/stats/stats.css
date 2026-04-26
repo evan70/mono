@@ -12,6 +12,18 @@
   text-align: center;
 }
 
+@supports not (gap: 1px) {
+  .stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: calc(var(--space-4) * -1);
+  }
+  .stats-grid > * {
+    margin: var(--space-4);
+    flex: 1 1 200px;
+  }
+}
+
 .stat-item {
   display: flex;
   flex-direction: column;
@@ -19,6 +31,9 @@
 }
 
 @supports not (gap: 1px) {
+  .stat-item {
+    gap: 0;
+  }
   .stat-item > * + * {
     margin-top: var(--space-2);
   }
