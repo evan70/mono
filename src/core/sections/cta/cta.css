@@ -33,7 +33,7 @@
   flex-wrap: wrap;
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .cta-section__actions {
     gap: 0;
     margin: calc(var(--space-2) * -1);

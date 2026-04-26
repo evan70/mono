@@ -16,7 +16,7 @@
   text-decoration: none;
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .btn {
     gap: 0;
   }

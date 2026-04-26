@@ -9,7 +9,7 @@
   width: 400px;
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .notification-container {
     gap: 0;
   }
@@ -44,7 +44,7 @@
   opacity: 0;
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .notification {
     gap: 0;
   }
@@ -115,7 +115,7 @@
   margin-top: var(--space-3);
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .notification__actions {
     gap: 0;
   }

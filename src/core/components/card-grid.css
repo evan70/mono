@@ -4,7 +4,7 @@
   width: 100%;
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .card-grid {
     display: flex;
     flex-wrap: wrap;

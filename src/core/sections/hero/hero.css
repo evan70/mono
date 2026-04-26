@@ -68,7 +68,8 @@
   justify-content: center;
 }
 
-@supports not (gap: 1px) {
+/* Fallback for browsers that support grid gap but not flex gap (e.g. Chrome 57-83, Safari < 14.1) */
+@supports not ((gap: 1px) and (inset: 0)) {
   .hero-section__buttons {
     gap: 0;
     margin: calc(var(--space-2) * -1);

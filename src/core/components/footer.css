@@ -23,7 +23,7 @@
   margin-bottom: var(--space-12);
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .footer__grid {
     display: flex;
     flex-wrap: wrap;
@@ -70,7 +70,7 @@
   gap: var(--space-3);
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .footer__list {
     gap: 0;
   }
@@ -98,7 +98,7 @@
   text-align: center;
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .footer__bottom {
     gap: 0;
   }
@@ -113,7 +113,7 @@
     justify-content: space-between;
     text-align: left;
   }
-  @supports not (gap: 1px) {
+  @supports not ((gap: 1px) and (inset: 0)) {
     .footer__bottom {
       gap: 0;
     }
@@ -135,7 +135,7 @@
   gap: var(--space-4);
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .footer__socials {
     gap: 0;
   }
