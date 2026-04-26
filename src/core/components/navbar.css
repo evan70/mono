@@ -130,8 +130,8 @@
   }
 }
 
-/* Fallbacks for Flexbox Gap (Chrome < 84 / Android 9) */
-@supports not (gap: 1px) {
+/* Fallbacks for Flexbox Gap (Chrome < 84 / Android 9, Safari < 14.1) */
+@supports not ((gap: 1px) and (inset: 0)) {
   .navbar__brand {
     gap: 0;
   }

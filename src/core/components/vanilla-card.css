@@ -43,7 +43,7 @@
   gap: var(--space-3);
 }
 
-@supports not (gap: 1px) {
+@supports not ((gap: 1px) and (inset: 0)) {
   .card__footer {
     gap: 0;
   }
