@@ -27,21 +27,21 @@
       "src/css.ts"
     ]
   },
-  "src/core/theme/default/assets/fonts/inter/Inter-Regular.woff2": {
-    "file": "assets/Inter-Regular.woff2",
-    "src": "src/core/theme/default/assets/fonts/inter/Inter-Regular.woff2"
+  "src/assets/fonts/inter/Inter-Regular.woff2": {
+    "file": "Inter-Regular.woff2",
+    "src": "src/assets/fonts/inter/Inter-Regular.woff2"
   },
-  "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Bold.woff2": {
-    "file": "assets/PlayfairDisplay-Bold.woff2",
-    "src": "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Bold.woff2"
+  "src/assets/fonts/playfair/PlayfairDisplay-Bold.woff2": {
+    "file": "PlayfairDisplay-Bold.woff2",
+    "src": "src/assets/fonts/playfair/PlayfairDisplay-Bold.woff2"
   },
-  "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Regular.woff2": {
-    "file": "assets/PlayfairDisplay-Regular.woff2",
-    "src": "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Regular.woff2"
+  "src/assets/fonts/playfair/PlayfairDisplay-Regular.woff2": {
+    "file": "PlayfairDisplay-Regular.woff2",
+    "src": "src/assets/fonts/playfair/PlayfairDisplay-Regular.woff2"
   },
-  "src/core/theme/default/assets/images/dae2d1fd9b13c89bb5b4a89280099d7a.webp": {
-    "file": "assets/dae2d1fd9b13c89bb5b4a89280099d7a.webp",
-    "src": "src/core/theme/default/assets/images/dae2d1fd9b13c89bb5b4a89280099d7a.webp"
+  "src/assets/images/dae2d1fd9b13c89bb5b4a89280099d7a.webp": {
+    "file": "dae2d1fd9b13c89bb5b4a89280099d7a.webp",
+    "src": "src/assets/images/dae2d1fd9b13c89bb5b4a89280099d7a.webp"
   },
   "src/css.ts": {
     "file": "core-css.js",
@@ -52,10 +52,10 @@
       "core-css.css"
     ],
     "assets": [
-      "assets/Inter-Regular.woff2",
-      "assets/PlayfairDisplay-Regular.woff2",
-      "assets/PlayfairDisplay-Bold.woff2",
-      "assets/dae2d1fd9b13c89bb5b4a89280099d7a.webp"
+      "Inter-Regular.woff2",
+      "PlayfairDisplay-Regular.woff2",
+      "PlayfairDisplay-Bold.woff2",
+      "dae2d1fd9b13c89bb5b4a89280099d7a.webp"
     ]
   },
   "src/dev/theme-switcher.ts": {

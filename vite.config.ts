@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
             if (name.endsWith('.css')) {
               return `[name].css`;
             }
-            return `assets/[name][extname]`;
+            return `[name][extname]`;
           }
         }
       }
