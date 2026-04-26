@@ -1,7 +1,7 @@
 {
-  "/home/evan/dev/05/mono/packages/theme-neon/src/assets/neon.css": {
+  "/home/engine/project/packages/theme-neon/src/assets/neon.css": {
     "file": "neon.css",
-    "src": "/home/evan/dev/05/mono/packages/theme-neon/src/assets/neon.css"
+    "src": "/home/engine/project/packages/theme-neon/src/assets/neon.css"
   },
   "index.html": {
     "file": "index.js",
@@ -27,6 +27,22 @@
       "src/css.ts"
     ]
   },
+  "src/core/theme/default/assets/fonts/inter/Inter-Regular.woff2": {
+    "file": "assets/Inter-Regular.woff2",
+    "src": "src/core/theme/default/assets/fonts/inter/Inter-Regular.woff2"
+  },
+  "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Bold.woff2": {
+    "file": "assets/PlayfairDisplay-Bold.woff2",
+    "src": "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Bold.woff2"
+  },
+  "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Regular.woff2": {
+    "file": "assets/PlayfairDisplay-Regular.woff2",
+    "src": "src/core/theme/default/assets/fonts/playfair/PlayfairDisplay-Regular.woff2"
+  },
+  "src/core/theme/default/assets/images/dae2d1fd9b13c89bb5b4a89280099d7a.webp": {
+    "file": "assets/dae2d1fd9b13c89bb5b4a89280099d7a.webp",
+    "src": "src/core/theme/default/assets/images/dae2d1fd9b13c89bb5b4a89280099d7a.webp"
+  },
   "src/css.ts": {
     "file": "core-css.js",
     "name": "core-css",
@@ -34,6 +50,12 @@
     "isEntry": true,
     "css": [
       "core-css.css"
+    ],
+    "assets": [
+      "assets/Inter-Regular.woff2",
+      "assets/PlayfairDisplay-Regular.woff2",
+      "assets/PlayfairDisplay-Bold.woff2",
+      "assets/dae2d1fd9b13c89bb5b4a89280099d7a.webp"
     ]
   },
   "src/dev/theme-switcher.ts": {
