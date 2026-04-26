@@ -146,6 +146,6 @@ Enjoy building fast, reliable interfaces!
 - **CSS Gap Fallbacks:** Chrome versions older than 84 do not support the Flexbox `gap` property. We added `@supports not (gap: 1px)` fallbacks in `navbar.css` and `card-grid.css` using margin-based spacing to ensure the layout remains intact on these older devices.
 
 ### Card Grid Mobile Layout
-**Problem:** The `card-grid--cols-3` and other column-specific variants were using `auto-fit` with `minmax`, which sometimes caused cards to appear side-by-side on larger mobile devices or tablets when they should have been stacked.
+**Problem:** The `card-grid--cols-3` and other column-specific variants were using `auto-fit` with `minmax`, which sometimes caused cards to appear side-by-side on mobile devices or tablets when they should have been stacked.
 **Solution:** Changed the grid implementation to a mobile-first approach. All column variants now default to 1 column (`1fr`) and use media queries to increase the column count on larger screens (768px for 2 columns, 1024px for 3, etc.). This ensures a consistent stacked layout on all mobile devices.
 
