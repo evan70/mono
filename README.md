@@ -143,5 +143,9 @@ Enjoy building fast, reliable interfaces!
 **Problem:** Users on older browsers, particularly Chrome 70 (common on Android 9), experienced non-functional navigation buttons and layout issues where elements appeared "squashed" or lacked proper spacing.
 **Solution:**
 - **JS Transpilation (The Key Fix):** The codebase uses modern ES features like optional chaining (`?.`) and nullish coalescing (`??`). Chrome 70 does not support these, causing the entire JavaScript bundle to fail with a syntax error. By lowering the build target to `['chrome70', 'es2015']` in `vite.config.ts`, we ensure all modern syntax is transpiled into a format compatible with these older engines, restoring the mobile menu toggle and other interactive functionality.
-- **CSS Gap Fallbacks:** Chrome versions older than 84 do not support the Flexbox `gap` property. We added `@supports not (gap: 1px)` fallbacks in `navbar.css` using margin-based spacing to ensure the layout remains intact on these older devices.
+- **CSS Gap Fallbacks:** Chrome versions older than 84 do not support the Flexbox `gap` property. We added `@supports not (gap: 1px)` fallbacks in `navbar.css` and `card-grid.css` using margin-based spacing to ensure the layout remains intact on these older devices.
+
+### Card Grid Mobile Layout
+**Problem:** The `card-grid--cols-3` and other column-specific variants were using `auto-fit` with `minmax`, which sometimes caused cards to appear side-by-side on larger mobile devices or tablets when they should have been stacked.
+**Solution:** Changed the grid implementation to a mobile-first approach. All column variants now default to 1 column (`1fr`) and use media queries to increase the column count on larger screens (768px for 2 columns, 1024px for 3, etc.). This ensures a consistent stacked layout on all mobile devices.
 
