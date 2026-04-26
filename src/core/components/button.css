@@ -29,8 +29,11 @@
   background-color: var(--brand-gold-dark);
 }
 
-.btn:focus-visible {
+.btn:focus {
   outline: none;
+}
+
+.btn:focus-visible {
   box-shadow: var(--focus-ring);
 }
 

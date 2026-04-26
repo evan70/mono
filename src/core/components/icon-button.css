@@ -16,8 +16,11 @@
   color: var(--brand-gold);
 }
 
-.icon-btn:focus-visible {
+.icon-btn:focus {
   outline: none;
+}
+
+.icon-btn:focus-visible {
   box-shadow: var(--focus-ring);
 }
 
