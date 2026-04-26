@@ -1,5 +1,6 @@
 // Global Design Tokens
 import './core/tokens/unified.css';
+import './core/theme/default/theme.css';
 import './core/global/utilities.css';
 
 // Core Components
